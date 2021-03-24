@@ -33,6 +33,9 @@ const IndexPage = () => {
   }
 
   const pricePerSquareMeter = state.price / state.surface
+  const rentabiliteBrute = 2.5
+  const rentabiliteNet = 2.5
+  const rentabiliteNetNet = 2.5
 
   return (
 
@@ -52,19 +55,62 @@ const IndexPage = () => {
             <Row>
               <Col xs={12} md={6}>
                 <Tile height={200} title={"Bien"}>
-                  <Form.Row>
-                    <Form.Label column sm="4">
-                      Surface (m2)
-                    </Form.Label>
-                    <Col>
-                      <Form.Control
-                        size="sm"
-                        type="text"
-                        value={state.surface}
-                        onChange={e => updateState('surface', e.target.value)}
-                      />
-                    </Col>
-                  </Form.Row>
+                  <Form>
+                    <Form.Group>
+                      <Form.Label>Surface</Form.Label>
+                      <div style={{ display: "flex" }}>
+                        <div style={{
+                          width: '1300px',
+                          marginTop: '8px',
+                          marginRight: '10px'
+                        }}>
+                          < Form.Control
+                            type="range"
+                            value={state.surface}
+                            custom
+                            onChange={e => updateState('surface', e.target.value)}
+                            min="7" max="300"
+                          />
+                        </div>
+                        <Form.Control
+                          size="sm"
+                          type="text"
+                          value={state.surface}
+                          onChange={e => updateState('surface', e.target.value)}
+                        />
+                      </div>
+                    </Form.Group>
+
+                    <Form.Group>
+                      <Form.Label>Prix</Form.Label>
+                      <div style={{ display: "flex" }}>
+                        <div style={{
+                          width: '1300px',
+                          marginTop: '8px',
+                          marginRight: '10px'
+                        }}>
+                          < Form.Control
+                            type="range"
+                            value={state.price}
+                            custom
+                            onChange={e => updateState('price', e.target.value)}
+                            min="30000" max="2000000"
+                          />
+                        </div>
+                        <Form.Control
+                          size="sm"
+                          type="text"
+                          value={state.price}
+                          onChange={e => updateState('price', e.target.value)}
+                        />
+                      </div>
+                    </Form.Group>
+
+                  </Form>
+
+
+
+
 
                   <br />
 
@@ -105,9 +151,41 @@ const IndexPage = () => {
               </Col>
 
               <Col xs={12} md={6}>
-                <Tile height={300} title={"Prix"}>
-                  <p>{pricePerSquareMeter}</p>
+                <Tile height={150} title={"Prix"} >
+                  <div className={"simple-number-tile"}>
+                    <span>{pricePerSquareMeter}</span>
+                    <span>E / m2</span>
+                  </div>
                 </Tile>
+
+                <br />
+
+                <Tile height={200} title={"Rentabilite net net"} >
+                  <div className={"simple-number-tile"}>
+                    <span>{rentabiliteNetNet}</span>
+                    <span>E / m2</span>
+                  </div>
+                </Tile>
+                <br />
+                <Row>
+                  <Col xs={12} md={6}>
+                    <Tile height={150} title={"Brute"} >
+                      <div className={"simple-number-tile"}>
+                        <span>{rentabiliteBrute}</span>
+                        <span>E / m2</span>
+                      </div>
+                    </Tile>
+                  </Col>
+                  <Col xs={12} md={6}>
+                    <Tile height={150} title={"Net"} >
+                      <div className={"simple-number-tile"}>
+                        <span>{rentabiliteNet}</span>
+                        <span>E / m2</span>
+                      </div>
+                    </Tile>
+                  </Col>
+                </Row>
+
               </Col>
 
             </Row>
@@ -115,7 +193,7 @@ const IndexPage = () => {
           </Container>
 
         </div>
-      </Layout>
+      </Layout >
 
     </main >
   )

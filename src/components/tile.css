@@ -1,0 +1,17 @@
+.tile-content {
+    background-color: white;
+    border-radius: 7px;
+    width: 100%;
+    overflow: scroll;
+    padding: 5px;
+}
+
+.tile-title {
+    text-transform: uppercase;
+    color: var(--dark-grey);
+    margin-bottom: 0px;
+    line-height: 1.15 !important;
+    font-size: 12px;
+    text-align: right;
+    margin-right: 5px
+}

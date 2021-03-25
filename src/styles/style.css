@@ -145,9 +145,3 @@ a:hover {
 .data-pill.selected {
     background-image: linear-gradient(50deg, rgba(1, 146, 222, 0.5), rgba(124, 69, 217, 0.5));
 }
-
-
-input[type=range]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    background-color: var(--python-gallery);
-  }

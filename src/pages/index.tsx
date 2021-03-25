@@ -1,6 +1,5 @@
 import * as React from "react"
 
-import "../styles/slider.less";
 
 
 import Card from "react-bootstrap/Card";
@@ -12,6 +11,8 @@ import Accordion from "react-bootstrap/Accordion";
 import Col from "react-bootstrap/Col";
 
 import Tile from "../components/Tile";
+import { SliderWithTitle } from "../components/SliderWithTitle";
+import { ColoredNumber } from "../components/ColoredNumber";
 import Layout from "../components/Layout";
 import Spacing from "../components/Spacing";
 
@@ -42,6 +43,8 @@ const ClassicNumber = ({ suffix, value }) => {
     </div>
   )
 }
+
+
 
 const IndexPage = () => {
 
@@ -75,76 +78,23 @@ const IndexPage = () => {
             <Row>
 
               <Col xs={12} md={6}>
-                <Tile height={200} title={"Bien"}>
-                  <Form>
-                    <Form.Group>
-                      <Form.Label>Surface</Form.Label>
-                      <div style={{ display: "flex" }}>
-                        <div style={{
-                          width: '1300px',
-                          marginTop: '8px',
-                          marginRight: '10px'
-                        }}>
-                          < Form.Control
-                            type="range"
-                            value={state.surface}
-                            custom
-                            onChange={e => updateState('surface', e.target.value)}
-                            min="7" max="300"
-                          />
-                        </div>
-                        <Form.Control
-                          size="sm"
-                          type="text"
-                          value={state.surface}
-                          onChange={e => updateState('surface', e.target.value)}
-                        />
-                      </div>
-                    </Form.Group>
-
-                    <Form.Group>
-                      <Form.Label>Prix</Form.Label>
-                      <div style={{ display: "flex" }}>
-                        <div style={{
-                          width: '1300px',
-                          marginTop: '8px',
-                          marginRight: '10px'
-                        }}>
-                          < Form.Control
-                            type="range"
-                            value={state.price}
-                            custom
-                            onChange={e => updateState('price', e.target.value)}
-                            min="30000" max="2000000"
-                          />
-                        </div>
-                        <Form.Control
-                          size="sm"
-                          type="text"
-                          value={state.price}
-                          onChange={e => updateState('price', e.target.value)}
-                        />
-                      </div>
-                    </Form.Group>
-
-                  </Form>
-
-                  <br />
-
-                  <Form.Row>
-                    <Form.Label column sm="4">
-                      Prix (E)
-                    </Form.Label>
-                    <Col>
-                      <Form.Control
-                        size="sm"
-                        type="text"
-                        value={state.price}
-                        onChange={e => updateState('price', e.target.value)}
-                      />
-                    </Col>
-                  </Form.Row>
-
+                <Tile height={160} title={"Bien"}>
+                  <SliderWithTitle
+                    title={"Surface"}
+                    unit={"m2"}
+                    min={7}
+                    max={300}
+                    onChange={e => updateState('surface', e.target.value)}
+                    value={state.surface}
+                  />
+                  <SliderWithTitle
+                    title={"Prix"}
+                    unit={"euros"}
+                    min={30000}
+                    max={2000000}
+                    onChange={e => updateState('price', e.target.value)}
+                    value={state.price}
+                  />
                 </Tile>
 
                 <br />
@@ -187,7 +137,7 @@ const IndexPage = () => {
                 <br />
 
                 <Tile height={200} title={"Rentabilite net net"} >
-                  <ClassicNumber value={rentabiliteNetNet} suffix={"%"} />
+                  <ColoredNumber value={rentabiliteNetNet} suffix={"%"} />
                 </Tile>
                 <br />
                 <Row>
@@ -207,6 +157,7 @@ const IndexPage = () => {
 
             </Row>
 
+            <Spacing />
           </Container>
 
         </div>

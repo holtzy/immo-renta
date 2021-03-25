@@ -1,5 +1,8 @@
 import * as React from "react"
 
+import "../styles/slider.less";
+
+
 import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
 import Container from "react-bootstrap/Container";
@@ -22,7 +25,24 @@ const initialState = {
   price: 98000
 }
 
-// markup
+
+const ClassicNumber = ({ suffix, value }) => {
+  return (
+    <div style={{
+      width: '100%',
+      height: '100%',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center'
+    }}>
+      <div>
+        <span style={{ fontSize: '4rem', fontWeight: 'bold' }}>{value}</span>
+        <span>{suffix}</span>
+      </div>
+    </div>
+  )
+}
+
 const IndexPage = () => {
 
   const [state, setState] = React.useState<InitialState>(initialState)
@@ -53,6 +73,7 @@ const IndexPage = () => {
             <br />
 
             <Row>
+
               <Col xs={12} md={6}>
                 <Tile height={200} title={"Bien"}>
                   <Form>
@@ -108,10 +129,6 @@ const IndexPage = () => {
 
                   </Form>
 
-
-
-
-
                   <br />
 
                   <Form.Row>
@@ -150,38 +167,38 @@ const IndexPage = () => {
 
               </Col>
 
+
+
+
+
+
+
+
+
+
+
+
+
               <Col xs={12} md={6}>
                 <Tile height={150} title={"Prix"} >
-                  <div className={"simple-number-tile"}>
-                    <span>{pricePerSquareMeter}</span>
-                    <span>E / m2</span>
-                  </div>
+                  <ClassicNumber value={Math.round(pricePerSquareMeter)} suffix={"Euros / m2"} />
                 </Tile>
 
                 <br />
 
                 <Tile height={200} title={"Rentabilite net net"} >
-                  <div className={"simple-number-tile"}>
-                    <span>{rentabiliteNetNet}</span>
-                    <span>E / m2</span>
-                  </div>
+                  <ClassicNumber value={rentabiliteNetNet} suffix={"%"} />
                 </Tile>
                 <br />
                 <Row>
                   <Col xs={12} md={6}>
                     <Tile height={150} title={"Brute"} >
-                      <div className={"simple-number-tile"}>
-                        <span>{rentabiliteBrute}</span>
-                        <span>E / m2</span>
-                      </div>
+                      <ClassicNumber value={rentabiliteBrute} suffix={"%"} />
                     </Tile>
                   </Col>
                   <Col xs={12} md={6}>
                     <Tile height={150} title={"Net"} >
-                      <div className={"simple-number-tile"}>
-                        <span>{rentabiliteNet}</span>
-                        <span>E / m2</span>
-                      </div>
+                      <ClassicNumber value={rentabiliteNet} suffix={"%"} />
                     </Tile>
                   </Col>
                 </Row>

@@ -1,5 +1,4 @@
 :root {
-    --distribution-color: yellow;
     --light-grey:  #f8f9fa;
     --medium-grey: #e5e5e5;
     --dark-grey: #C8C8C8;
@@ -148,8 +147,7 @@ a:hover {
 }
 
 
-.simple-number-tile {
-    width: 100%;
-    text-align: center;
-    margin: auto;
-}
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    background-color: var(--python-gallery);
+  }

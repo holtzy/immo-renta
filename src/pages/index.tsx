@@ -11,7 +11,7 @@ import { SliderWithTitle } from "../components/SliderWithTitle";
 import { ColoredNumber } from "../components/ColoredNumber";
 import Layout from "../components/Layout";
 import Spacing from "../components/Spacing";
-import { RentabiliteBruteExplanationModal } from "../components/ExplanationModals"
+import { RentabiliteBruteExplanationModal, RentabiliteNetNetExplanationModal } from "../components/ExplanationModals"
 
 type InitialState = {
   surface: number;
@@ -133,7 +133,7 @@ const IndexPage = () => {
 
                 <br />
 
-                <Tile height={200} title={"Rentabilite net net"} explanation={"hello"} >
+                <Tile height={200} title={"Rentabilite net net"} explanation={<RentabiliteNetNetExplanationModal />} >
                   <ColoredNumber value={rentabiliteNetNet} suffix={"%"} />
                 </Tile>
                 <br />

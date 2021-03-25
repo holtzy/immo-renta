@@ -15,6 +15,7 @@
     "clean": "gatsby clean"
   },
   "dependencies": {
+    "algebra": "^1.0.1",
     "bootstrap": "^4.6.0",
     "gatsby": "^3.1.1",
     "gatsby-plugin-less": "^5.1.0",
@@ -22,6 +23,7 @@
     "react": "^17.0.1",
     "react-bootstrap": "^1.5.2",
     "react-dom": "^17.0.1",
-    "react-helmet": "^6.1.0"
+    "react-helmet": "^6.1.0",
+    "react-mathjax2": "0.0.2"
   }
 }

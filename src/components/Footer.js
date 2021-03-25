@@ -6,7 +6,7 @@ import SocialMediaButtons from "./SocialMediaButtons";
 export default function Footer() {
   return (
     <div className="footer">
-      <div className="copyright">Copyright © React Loves D3 2021</div>
+      <div className="copyright">Copyright © react-immo 2021</div>
       <SocialMediaButtons />
       <div className="policy">
         <span>

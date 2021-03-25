@@ -1,9 +1,5 @@
 import * as React from "react"
 
-
-
-import Card from "react-bootstrap/Card";
-import Form from "react-bootstrap/Form";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Button from "react-bootstrap/Button";
@@ -15,6 +11,7 @@ import { SliderWithTitle } from "../components/SliderWithTitle";
 import { ColoredNumber } from "../components/ColoredNumber";
 import Layout from "../components/Layout";
 import Spacing from "../components/Spacing";
+import { RentabiliteBruteExplanationModal } from "../components/ExplanationModals"
 
 type InitialState = {
   surface: number;
@@ -136,13 +133,13 @@ const IndexPage = () => {
 
                 <br />
 
-                <Tile height={200} title={"Rentabilite net net"} >
+                <Tile height={200} title={"Rentabilite net net"} explanation={"hello"} >
                   <ColoredNumber value={rentabiliteNetNet} suffix={"%"} />
                 </Tile>
                 <br />
                 <Row>
                   <Col xs={12} md={6}>
-                    <Tile height={150} title={"Brute"} >
+                    <Tile height={150} title={"Brute"} explanation={<RentabiliteBruteExplanationModal />} >
                       <ClassicNumber value={rentabiliteBrute} suffix={"%"} />
                     </Tile>
                   </Col>

@@ -6,12 +6,18 @@
     padding: 5px;
 }
 
+.title-title-container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
 .tile-title {
     text-transform: uppercase;
     color: var(--dark-grey);
     margin-bottom: 0px;
     line-height: 1.15 !important;
     font-size: 12px;
-    text-align: right;
     margin-right: 5px
 }

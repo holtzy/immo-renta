@@ -1,7 +1,7 @@
 /* Root variables are for light mode (default) and general stuff */
 :root {
     --navbar-height: 45px;
-    --mode-transform-duration: 4.5s;
+    --mode-transform-duration: 2.5s;
 
     /* raw colors */
     --light-grey:  #f8f9fa;

@@ -1,5 +1,7 @@
 .footer {
     background-color: var(--footer-color);
+    transition: all var(--mode-transform-duration) ease;
+
     padding: 40px;
     width: 100%;
     height: 50px;
@@ -16,10 +18,14 @@
 .policy {
     text-align: left;
     width: 33%;
+    color: var(--text-normal);
+    transition: all var(--mode-transform-duration) ease;
 }
 .copyright {
     text-align: right;
-    width: 33%
+    width: 33%;
+    color: var(--text-normal);
+    transition: all var(--mode-transform-duration) ease;
 }
 
 @media (max-width: 650px){

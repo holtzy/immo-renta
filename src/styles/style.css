@@ -51,6 +51,8 @@ h6 {
   font-family: 'Montserrat', Helvetica, Arial, sans-serif !important;
   /* scroll margin allows to add a bit of space around the title we're targeting with the table of content */
   scroll-margin: 100px;
+  color: var(--text-normal);
+  transition: all var(--mode-transform-duration) ease;
 }
 
 h2 {

@@ -1,3 +1,7 @@
+.modal-content {
+    background-color: var(--background-light) !important;
+}
+
 .explanation-modal-button {
     font-size: 12px;
     cursor: pointer;

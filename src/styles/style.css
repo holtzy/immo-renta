@@ -1,15 +1,43 @@
+/* Root variables are for light mode (default) and general stuff */
 :root {
+    --navbar-height: 45px;
+    --mode-transform-duration: 4.5s;
+
+    /* raw colors */
     --light-grey:  #f8f9fa;
     --medium-grey: #e5e5e5;
     --dark-grey: #C8C8C8;
-    --python-gallery: #6732C5;
-    --light-black: #484848;
-    --navbar-height: 45px;
+    --light-black: #182635;
+    --medium-black: #28292b;
+    --dark-black: #0e141b;
+    --dark-purple: #6732C5;
+    --medium-purple: #8f73be;
+    --light-purple: #a392c0;
+
+    /* item colors */
+    --background-dark: var(--light-grey);
+    --background-light: white;
+    --text-normal: black;
+    --text-vibrant: var(--medium-purple);
+    --footer-color: white;
 }
+
+/* In dark mode, some variable have different values: */
+body.dark {
+    --background-dark: var(--dark-black);
+    --background-light: var(--medium-black);
+    --text-vibrant: var(--light-purple);
+    --text-normal: white;
+    --footer-color: var(--light-black);
+
+}
+
 
 body {
     overflow-x: hidden;
     font-family: 'Roboto' !important;
+    background-color: var(--background-dark) !important;
+    transition: all var(--mode-transform-duration) ease;
 }
 
 /* ---------- Titles ----------------- */
@@ -37,13 +65,14 @@ h2 {
 p {
     line-height: 1.75 !important;
     font-family: 'Roboto' !important;
+    color: var(--text-normal);
+    transition: all var(--mode-transform-duration) ease;
+}
+span {
+    color: var(--text-normal);
+    transition: all var(--mode-transform-duration) ease;
 }
 
-
-/* ---------- Section ----------------- */
-.greySection {
-    background-color: var(--light-grey);
-}
 
 /* Reduce the content width on big screen. I like it when it looks a bit more like newspaper */
 @media (min-width: 992px){
@@ -53,22 +82,6 @@ p {
     }
 }
 
-blockquote {
-    background: var(--light-grey);
-    border-left: 2px solid var(--python-gallery);
-    margin: 10px 50px;
-    padding: 0.5em 10px;
-    quotes: "\201C""\201D""\2018""\2019";
-  }
-blockquote p {
-    display: inline;
-}
-
-/* To remove, test for table of content */
-.is-current{
-    color: red !important;
-    background-color: red;
-}
 
 a {
     color: var(--python-gallery) !important;
@@ -77,30 +90,6 @@ a {
 a:hover {
     color: #251667 !important;
 }
-
-/* Each section has a specific color */
-.distribution{
-    color: #e0ac2b
-}
-.correlation{
-    color: #7f7f7f;
-}
-.ranking{
-    color: #a4c969;
-}
-.partOfAWhole{
-    color: #e85252;
-}
-.evolution{
-    color: #6689c6;
-}
-.map{
-    color: #9a6fb0;
-}
-.flow{
-    color: #a53253;
-}
-
 
 /* ---------- Button ----------------- */
 .btn {
@@ -128,7 +117,8 @@ a:hover {
     font-size: 20px;
 }
 
-/* ---------- Button ----------------- */
+
+/* ---------- pills ----------------- */
 .data-pill {
     border-radius: 3px;
     margin-right: 4px;

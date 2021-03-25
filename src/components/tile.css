@@ -1,5 +1,6 @@
 .tile-content {
-    background-color: white;
+    background-color: var(--background-light);
+    transition: all var(--mode-transform-duration) ease;
     border-radius: 7px;
     width: 100%;
     overflow: scroll;
@@ -15,7 +16,7 @@
 
 .tile-title {
     text-transform: uppercase;
-    color: var(--dark-grey);
+    color: var(--text-vibrant);
     margin-bottom: 0px;
     line-height: 1.15 !important;
     font-size: 12px;

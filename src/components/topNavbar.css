@@ -11,15 +11,18 @@
 
 /* link to homepage on the topleft */
 .navbar-brand {
-    color: var(--python-gallery) !important;
+    display: flex !important;
+    align-items: flex-end !important;
+    color: var(--text-vibrant) !important;
+    transition: all var(--mode-transform-duration) ease;
     font-size: 15px !important;
-    margin-bottom: 8px;
 }
 
 /* Main link in the navbar */
 .nav-link {
     text-transform: uppercase!important;
-    color: black !important;
+    color: var(--text-normal) !important;
+    transition: all var(--mode-transform-duration) ease;
     font-family: 'Montserrat' !important;
     font-size: 13px !important;
     border-width: 1px !important;
@@ -27,23 +30,11 @@
     border-color: transparent;
 }
 .nav-link:hover {
-    color: var(--python-gallery) !important;
-    border-bottom: solid var(--python-gallery);
+    color: var(--text-vibrant) !important;
+    border-bottom: solid var(--text-vibrant);
+    transition: all var(--mode-transform-duration) ease;
     border-width: 1px;
 }
 
-.dropdown-item {
-    font-size: 13px;
-    padding-left: 28px !important;
-    color: darkgrey !important;
-}
-.menuItemMain {
-    font-size: 15px;
-    color: black !important;
-    padding-left: 15px !important;
-    margin-right: 80px !important;
-    margin-bottom: 0px !important;
-}
-.menuItemLogo {
-    padding-left: 10px;
-}
+
+

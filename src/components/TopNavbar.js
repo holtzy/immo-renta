@@ -14,10 +14,15 @@ export default function TopNavbar() {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
+  const [isDarkMode, setIsDarkMode] = React.useState(false)
+
   return (
     <Container>
       <Navbar className="container" expand="lg" fixed="top">
-        <Navbar.Brand href="/"><img src={icon} alt="Matplotlib logo" style={{ width: '25px', marginRight: "8px" }} /></Navbar.Brand>
+        <Navbar.Brand href="/">
+          <img src={icon} alt="Matplotlib logo" style={{ width: '22px', marginRight: "8px" }} />
+          <div>Immo Renta</div>
+        </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav" >
 
@@ -27,7 +32,18 @@ export default function TopNavbar() {
 
           <Nav.Link href="/about">About</Nav.Link>
 
+          <Nav.Link onClick={() => {
+            isDarkMode ?
+              document.body.classList.remove("dark") :
+              document.body.classList.add("dark")
+            setIsDarkMode(!isDarkMode)
+          }}>
+            {isDarkMode ? (<span style={{ fontSize: '20px' }}>🌙</span>) : (<span style={{ fontSize: '20px' }}>☀️</span>)}
+          </Nav.Link>
+
         </Navbar.Collapse>
+
+
       </Navbar>
     </Container>
   );

@@ -2,8 +2,6 @@ import * as React from "react"
 
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
-import Button from "react-bootstrap/Button";
-import Accordion from "react-bootstrap/Accordion";
 import Col from "react-bootstrap/Col";
 
 import Tile from "../components/Tile";
@@ -59,108 +57,100 @@ const IndexPage = () => {
 
   return (
 
-    < main >
-      <title>Home Page</title>
+    <Layout title="Renta-Immo" seoDescription="Calculez la rentabilité de votre investissement immobilier en 1 click.">
 
-      <Layout title="React Loves D3" seoDescription="How to make React and D3.js work together">
+      <Container>
 
-        <div className={"greySection"}>
+        <br />
+        <br />
+        <br />
 
-          <Container>
+        <Row>
+
+          <Col xs={12} md={6}>
+            <Tile height={160} title={"Bien"}>
+              <SliderWithTitle
+                title={"Surface"}
+                unit={"m2"}
+                min={7}
+                max={300}
+                onChange={e => updateState('surface', e.target.value)}
+                value={state.surface}
+              />
+              <SliderWithTitle
+                title={"Prix"}
+                unit={"euros"}
+                min={30000}
+                max={2000000}
+                onChange={e => updateState('price', e.target.value)}
+                value={state.price}
+              />
+            </Tile>
 
             <br />
-            <br />
+
+            <Tile height={300} title={"Location"}>
+              <p>Hello</p>
+            </Tile>
+
             <br />
 
+            <Tile height={300} title={"Fiscalité"}>
+              <p>Hello</p>
+            </Tile>
+
+            <br />
+
+            <Tile height={300} title={"Emprunt"}>
+              <p>Hello</p>
+            </Tile>
+
+          </Col>
+
+
+
+
+
+
+
+
+
+
+
+
+
+          <Col xs={12} md={6}>
+            <Tile height={150} title={"Prix"} >
+              <ClassicNumber value={Math.round(pricePerSquareMeter)} suffix={"Euros / m2"} />
+            </Tile>
+
+            <br />
+
+            <Tile height={200} title={"Rentabilite net net"} explanation={<RentabiliteNetNetExplanationModal />} >
+              <ColoredNumber value={rentabiliteNetNet} suffix={"%"} />
+            </Tile>
+            <br />
             <Row>
-
               <Col xs={12} md={6}>
-                <Tile height={160} title={"Bien"}>
-                  <SliderWithTitle
-                    title={"Surface"}
-                    unit={"m2"}
-                    min={7}
-                    max={300}
-                    onChange={e => updateState('surface', e.target.value)}
-                    value={state.surface}
-                  />
-                  <SliderWithTitle
-                    title={"Prix"}
-                    unit={"euros"}
-                    min={30000}
-                    max={2000000}
-                    onChange={e => updateState('price', e.target.value)}
-                    value={state.price}
-                  />
+                <Tile height={150} title={"Brute"} explanation={<RentabiliteBruteExplanationModal />} >
+                  <ClassicNumber value={rentabiliteBrute} suffix={"%"} />
                 </Tile>
-
-                <br />
-
-                <Tile height={300} title={"Location"}>
-                  <p>Hello</p>
-                </Tile>
-
-                <br />
-
-                <Tile height={300} title={"Fiscalité"}>
-                  <p>Hello</p>
-                </Tile>
-
-                <br />
-
-                <Tile height={300} title={"Emprunt"}>
-                  <p>Hello</p>
-                </Tile>
-
               </Col>
-
-
-
-
-
-
-
-
-
-
-
-
-
               <Col xs={12} md={6}>
-                <Tile height={150} title={"Prix"} >
-                  <ClassicNumber value={Math.round(pricePerSquareMeter)} suffix={"Euros / m2"} />
+                <Tile height={150} title={"Net"} >
+                  <ClassicNumber value={rentabiliteNet} suffix={"%"} />
                 </Tile>
-
-                <br />
-
-                <Tile height={200} title={"Rentabilite net net"} explanation={<RentabiliteNetNetExplanationModal />} >
-                  <ColoredNumber value={rentabiliteNetNet} suffix={"%"} />
-                </Tile>
-                <br />
-                <Row>
-                  <Col xs={12} md={6}>
-                    <Tile height={150} title={"Brute"} explanation={<RentabiliteBruteExplanationModal />} >
-                      <ClassicNumber value={rentabiliteBrute} suffix={"%"} />
-                    </Tile>
-                  </Col>
-                  <Col xs={12} md={6}>
-                    <Tile height={150} title={"Net"} >
-                      <ClassicNumber value={rentabiliteNet} suffix={"%"} />
-                    </Tile>
-                  </Col>
-                </Row>
-
               </Col>
-
             </Row>
 
-            <Spacing />
-          </Container>
+          </Col>
 
-        </div>
-      </Layout >
+        </Row>
 
-    </main >
+        <Spacing />
+      </Container>
+
+    </Layout >
   )
 }
 

@@ -36,7 +36,7 @@ export default function Layout({ children, title, chartType, seoDescription, key
         <TopNavbar />
       </header>
 
-      <main>{children}</main>
+      <main id="mainContainer">{children}</main>
 
       <Footer />
     </>

@@ -12,7 +12,7 @@ import { ColoredNumber } from "../components/ColoredNumber";
 import Layout from "../components/Layout";
 import Spacing from "../components/Spacing";
 import { RentabiliteBruteExplanationModal, RentabiliteNetNetExplanationModal } from "../components/ExplanationModals"
-import { computeAnnualTaxes } from '../utils/mathFormulas'
+import { computeAnnualTaxes, computeLoanTable } from '../utils/mathFormulas'
 
 type InitialState = {
   surface: number;
@@ -92,13 +92,17 @@ const IndexPage = () => {
 
   const pricePerSquareMeter = state.price / state.surface
   const annualRent = state.rent * 12
-  const rentabiliteBrute = annualRent / state.price * 100
 
   const initialAnnualTax = computeAnnualTaxes(state.netAnnualRevenu, 1)
-  const withLocationAnnualTax = computeAnnualTaxes((state.netAnnualRevenu + annualRent), 1)
 
-  const rentabiliteNet = 2.5
-  const rentabiliteNetNet = 2.5
+  const withLocationAnnualTax = computeAnnualTaxes((state.netAnnualRevenu + annualRent), 1)
+  const taxSurplus = withLocationAnnualTax - initialAnnualTax
+
+  const rentabiliteBrute = annualRent / state.price * 100
+  const rentabiliteNet = (annualRent - taxSurplus) / state.price * 100
+  const rentabiliteNetNet = (annualRent - taxSurplus) / state.price * 100
+
+  const titi = computeLoanTable(200000, 20, 1.2)
 
   return (
 
@@ -120,7 +124,7 @@ const IndexPage = () => {
                 unit={"€"}
                 min={30000}
                 max={2000000}
-                onChange={e => updateState('price', e.target.value)}
+                onChange={e => updateState('price', Number(e.target.value))}
                 value={state.price}
               />
               <Row>
@@ -141,7 +145,7 @@ const IndexPage = () => {
                     unit={"€"}
                     min={0}
                     max={200000}
-                    onChange={e => updateState('houseBuildingWork', e.target.value)}
+                    onChange={e => updateState('houseBuildingWork', Number(e.target.value))}
                     value={state.houseBuildingWork}
                   />
                 </Col>
@@ -151,7 +155,7 @@ const IndexPage = () => {
                 unit={"m2"}
                 min={7}
                 max={300}
-                onChange={e => updateState('surface', e.target.value)}
+                onChange={e => updateState('surface', Number(e.target.value))}
                 value={state.surface}
               />
             </Tile>
@@ -165,7 +169,7 @@ const IndexPage = () => {
                 unit={"€ / mois"}
                 min={100}
                 max={4000}
-                onChange={e => updateState('rent', e.target.value)}
+                onChange={e => updateState('rent', Number(e.target.value))}
                 value={state.rent}
               />
               <Row>
@@ -175,7 +179,7 @@ const IndexPage = () => {
                     unit={"€ / mois"}
                     min={0}
                     max={1000}
-                    onChange={e => updateState('agencyMensualFee', e.target.value)}
+                    onChange={e => updateState('agencyMensualFee', Number(e.target.value))}
                     value={state.agencyMensualFee}
                   />
                 </Col>
@@ -185,7 +189,7 @@ const IndexPage = () => {
                     unit={"nombre"}
                     min={0}
                     max={12}
-                    onChange={e => updateState('monthsWithNoRent', e.target.value)}
+                    onChange={e => updateState('monthsWithNoRent', Number(e.target.value))}
                     value={state.monthsWithNoRent}
                   />
                 </Col>
@@ -197,7 +201,7 @@ const IndexPage = () => {
                     unit={"€ / mois"}
                     min={0}
                     max={1000}
-                    onChange={e => updateState('ownerMensualFees', e.target.value)}
+                    onChange={e => updateState('ownerMensualFees', Number(e.target.value))}
                     value={state.ownerMensualFees}
                   />
                 </Col>
@@ -207,7 +211,7 @@ const IndexPage = () => {
                     unit={"€ / mois"}
                     min={0}
                     max={1000}
-                    onChange={e => updateState('refundableMensualFees', e.target.value)}
+                    onChange={e => updateState('refundableMensualFees', Number(e.target.value))}
                     value={state.refundableMensualFees}
                   />
                 </Col>
@@ -223,7 +227,7 @@ const IndexPage = () => {
                 unit={"€ / an"}
                 min={10000}
                 max={300000}
-                onChange={e => updateState('netAnnualRevenu', e.target.value)}
+                onChange={e => updateState('netAnnualRevenu', Number(e.target.value))}
                 value={state.netAnnualRevenu}
               />
               <Row>

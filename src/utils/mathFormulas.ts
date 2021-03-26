@@ -7,6 +7,8 @@ const taxThresholds = [
     { min: 158123, max: 1000000000000000, taxValue: 45 }
 ]
 
+// Compute the amount of tax to pay according to the family revenu
+// and the # of people composing the family
 export const computeAnnualTaxes = (revenu: number, numberOfPeople: number) => {
 
     let taxValue = 0
@@ -24,5 +26,27 @@ export const computeAnnualTaxes = (revenu: number, numberOfPeople: number) => {
     })
 
     return taxValue * numberOfPeople
+
+}
+
+export const computeLoanTable = (amount: number, loanLength: number, rate: number) => {
+
+    const mensualiteNumber = loanLength * 12;
+    console.log("mensualityNumber", mensualiteNumber)
+
+    const monthlyRate = Math.pow((1 + rate / 100), (1 / 12)) - 1
+    console.log("monthlyRate", monthlyRate)
+
+    const mensualiteValue =
+        (amount * monthlyRate * Math.pow((1 + monthlyRate), mensualiteNumber)) /
+        (Math.pow((1 + monthlyRate), (mensualiteNumber)) - 1);
+
+    console.log("mensualiteValue", mensualiteValue)
+
+    for (let year = 1; year <= loanLength; year++) {
+        console.log("year", year)
+        const interest = amount * rate / 100
+        //const remaining = amount -
+    }
 
 }

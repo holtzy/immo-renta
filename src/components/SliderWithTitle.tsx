@@ -31,9 +31,16 @@ export const SliderWithTitle = ({
                 <span className={"slider-with-title-unit"}>{unit}</span>
             </div>
             <div style={{ display: "flex" }}>
+
+                <Form.Control
+                    size="sm"
+                    type="text"
+                    value={value}
+                    onChange={onChange}
+                />
                 <div style={{
-                    width: '1300px',
-                    marginRight: '10px'
+                    width: '300px',
+                    marginLeft: '20px'
                 }}>
                     < Form.Control
                         type="range"
@@ -44,12 +51,6 @@ export const SliderWithTitle = ({
                         max={max}
                     />
                 </div>
-                <Form.Control
-                    size="sm"
-                    type="text"
-                    value={value}
-                    onChange={onChange}
-                />
             </div>
         </Form.Group>
     )

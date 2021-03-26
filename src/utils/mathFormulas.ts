@@ -29,24 +29,22 @@ export const computeAnnualTaxes = (revenu: number, numberOfPeople: number) => {
 
 }
 
-export const computeLoanTable = (amount: number, loanLength: number, rate: number) => {
-
-    const mensualiteNumber = loanLength * 12;
-    console.log("mensualityNumber", mensualiteNumber)
-
+// Found and corrected from https://www.hellopret.fr/taux-immobilier/calcul-interet-emprunt/
+export const computeMensuality = (amount: number, loanLength: number, rate: number) => {
+    console.log(amount, loanLength, rate)
+    const mensualityNumber = loanLength * 12;
     const monthlyRate = Math.pow((1 + rate / 100), (1 / 12)) - 1
-    console.log("monthlyRate", monthlyRate)
+    const mensualityValue =
+        (amount * monthlyRate * Math.pow((1 + monthlyRate), mensualityNumber)) /
+        (Math.pow((1 + monthlyRate), (mensualityNumber)) - 1);
+    return mensualityValue
+}
 
-    const mensualiteValue =
-        (amount * monthlyRate * Math.pow((1 + monthlyRate), mensualiteNumber)) /
-        (Math.pow((1 + monthlyRate), (mensualiteNumber)) - 1);
+export const computeTotalLoanInterest = (mensuality: number, loanLength: number, amount: number) => {
+    return (mensuality * loanLength * 12) - amount
+}
 
-    console.log("mensualiteValue", mensualiteValue)
 
-    for (let year = 1; year <= loanLength; year++) {
-        console.log("year", year)
-        const interest = amount * rate / 100
-        //const remaining = amount -
-    }
+export const computeLoanTable = (amount: number, loanLength: number, rate: number) => {
 
 }

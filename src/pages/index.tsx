@@ -12,7 +12,7 @@ import { ColoredNumber } from "../components/ColoredNumber";
 import Layout from "../components/Layout";
 import Spacing from "../components/Spacing";
 import { RentabiliteBruteExplanationModal, RentabiliteNetNetExplanationModal } from "../components/ExplanationModals"
-import { computeAnnualTaxes, computeLoanTable } from '../utils/mathFormulas'
+import { computeAnnualTaxes, computeLoanTable, computeMensuality, computeTotalLoanInterest } from '../utils/mathFormulas'
 
 type InitialState = {
   surface: number;
@@ -27,6 +27,9 @@ type InitialState = {
   houseBuildingWork: number;
   netAnnualRevenu: number;
   numberOfFiscalPeople: number;
+  loanAmount: number;
+  loanLength: number;
+  loanRate: number;
 }
 
 const initialState = {
@@ -41,7 +44,10 @@ const initialState = {
   isHouseBrandNew: false,
   houseBuildingWork: 0,
   netAnnualRevenu: 60000,
-  numberOfFiscalPeople: 2
+  numberOfFiscalPeople: 2,
+  loanAmount: 0,
+  loanLength: 20,
+  loanRate: 1.5
 }
 
 const fiscalOptions = [
@@ -102,7 +108,12 @@ const IndexPage = () => {
   const rentabiliteNet = (annualRent - taxSurplus) / state.price * 100
   const rentabiliteNetNet = (annualRent - taxSurplus) / state.price * 100
 
-  const titi = computeLoanTable(200000, 20, 1.2)
+  // Pret
+  const mensuality = computeMensuality(state.loanAmount, state.loanLength, state.loanRate)
+  console.log(mensuality)
+  const totalPaidBack = mensuality * state.loanLength * 12
+  const totalLoanInterests = computeTotalLoanInterest(mensuality, state.loanLength, state.loanAmount)
+  const loanInterestPerYear = totalLoanInterests / state.loanLength
 
   return (
 
@@ -255,6 +266,35 @@ const IndexPage = () => {
 
             <br />
 
+            <Tile height={300} title={"Emprunt"}>
+              <SliderWithTitle
+                title={"Quantité empruntée"}
+                unit={"€"}
+                min={0}
+                max={state.price}
+                onChange={e => updateState('loanAmount', Number(e.target.value))}
+                value={state.loanAmount}
+              />
+              <SliderWithTitle
+                title={"Durée du prêt"}
+                unit={"Années"}
+                min={0}
+                max={25}
+                onChange={e => updateState('loanLength', Number(e.target.value))}
+                value={state.loanLength}
+              />
+              <SliderWithTitle
+                title={"Taux d'emprunt"}
+                unit={"%"}
+                min={0.2}
+                max={8}
+                onChange={e => updateState('loanRate', Number(e.target.value))}
+                value={state.loanRate}
+              />
+            </Tile>
+
+            <br />
+
             {/* FISCALITE */}
             <Tile height={300} title={"Fiscalité"}>
               <SelectWithTitle
@@ -266,11 +306,7 @@ const IndexPage = () => {
               />
             </Tile>
 
-            <br />
 
-            <Tile height={300} title={"Emprunt"}>
-              <p>Hello</p>
-            </Tile>
 
           </Col>
 
@@ -332,8 +368,37 @@ const IndexPage = () => {
                 </Tile>
               </Col>
             </Row>
-          </Col>
 
+            <br />
+            <br />
+
+
+            {/* RESULT: PRET */}
+            <Tile height={200} title={"Intéret annuel"} explanation={<RentabiliteBruteExplanationModal />} >
+              <ClassicNumber value={Math.round(loanInterestPerYear)} suffix={"€"} size={50} />
+            </Tile>
+            <br />
+            <Row>
+              <Col xs={12} md={4}>
+                <Tile height={75} title={"Mensualité"} explanation={<RentabiliteBruteExplanationModal />} >
+                  <ClassicNumber value={Math.round(mensuality)} suffix={"€"} size={30} />
+                </Tile>
+              </Col>
+              <Col xs={12} md={4}>
+                <Tile height={75} title={"Total Remboursé"} >
+                  <ClassicNumber value={Math.round(totalPaidBack)} suffix={"€"} size={30} />
+                </Tile>
+              </Col>
+              <Col xs={12} md={4}>
+                <Tile height={75} title={"Total intérêt"} >
+                  <ClassicNumber value={Math.round(totalLoanInterests)} suffix={"€"} size={30} />
+                </Tile>
+              </Col>
+            </Row>
+
+
+
+          </Col>
         </Row>
 
         <Spacing />

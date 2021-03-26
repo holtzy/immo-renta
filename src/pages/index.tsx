@@ -12,7 +12,7 @@ import { ColoredNumber } from "../components/ColoredNumber";
 import Layout from "../components/Layout";
 import Spacing from "../components/Spacing";
 import { RentabiliteBruteExplanationModal, RentabiliteNetNetExplanationModal } from "../components/ExplanationModals"
-import { computeAnnualTaxes, computeLoanTable, computeMensuality, computeTotalLoanInterest } from '../utils/mathFormulas'
+import { computeAnnualTaxes, computeMensuality, computeTotalLoanInterest, computeNetNetRentability } from '../utils/mathFormulas'
 
 type InitialState = {
   surface: number;
@@ -24,36 +24,40 @@ type InitialState = {
   ownerMensualFees: number;
   refundableMensualFees: number;
   isHouseBrandNew: boolean;
-  houseBuildingWork: number;
+  initialHouseBuildingWork: number;
+  annualHouseBuildingWork: number;
   netAnnualRevenu: number;
   numberOfFiscalPeople: number;
   loanAmount: number;
   loanLength: number;
   loanRate: number;
+  taxeFonciere: number;
 }
 
 const initialState = {
   surface: 40,
   price: 98000,
   rent: 400,
-  fiscality: "meuble",
+  fiscality: "nonMeubleMicro",
   monthsWithNoRent: 1,
   agencyMensualFee: 0,
   ownerMensualFees: 100,
   refundableMensualFees: 100,
   isHouseBrandNew: false,
-  houseBuildingWork: 0,
+  initialHouseBuildingWork: 0,
+  annualHouseBuildingWork: 0,
   netAnnualRevenu: 60000,
   numberOfFiscalPeople: 2,
   loanAmount: 0,
   loanLength: 20,
-  loanRate: 1.5
+  loanRate: 1.5,
+  taxeFonciere: 100
 }
 
 const fiscalOptions = [
-  { value: 'meuble', label: 'Meublé' },
-  { value: 'nonMeubleMicro', label: 'Non meublé - réel' },
-  { value: 'nonMeubleReel', label: 'Non meublé - micro' }
+  { value: 'meuble', label: 'Meublé non professionel' },
+  { value: 'nonMeubleMicro', label: 'Non meublé - frais réel' },
+  { value: 'nonMeubleReel', label: 'Non meublé - micro-foncier' }
 ]
 
 const numberOfFiscalPeopleOptions =
@@ -97,20 +101,27 @@ const IndexPage = () => {
   }
 
   const pricePerSquareMeter = state.price / state.surface
-  const annualRent = state.rent * 12
+  const annualRent = Number(state.rent) * 12 - state.rent * state.monthsWithNoRent
 
+  const notarialFee = state.isHouseBrandNew ? state.price * 4 / 100 : state.price * 8 / 100
+
+  // Impots
   const initialAnnualTax = computeAnnualTaxes(state.netAnnualRevenu, 1)
-
-  const withLocationAnnualTax = computeAnnualTaxes((state.netAnnualRevenu + annualRent), 1)
+  const loyerImposable = state.fiscality === "nonMeubleMicro" ?
+    annualRent * 0.7 :
+    state.fiscality === "meuble" ?
+      annualRent * 0.5 :
+      annualRent
+  const withLocationAnnualTax = computeAnnualTaxes((state.netAnnualRevenu + loyerImposable), 1)
   const taxSurplus = withLocationAnnualTax - initialAnnualTax
 
-  const rentabiliteBrute = annualRent / state.price * 100
-  const rentabiliteNet = (annualRent - taxSurplus) / state.price * 100
-  const rentabiliteNetNet = (annualRent - taxSurplus) / state.price * 100
+  // Rentabilités
+  const rentabiliteBrute = annualRent / (state.price + state.initialHouseBuildingWork + notarialFee) * 100
+  const rentabiliteNet = (annualRent - 12 * state.agencyMensualFee - 12 * state.ownerMensualFees - state.taxeFonciere) / state.price * 100
+  const rentabiliteNetNet = computeNetNetRentability(state.fiscality, annualRent, taxSurplus)
 
   // Pret
   const mensuality = computeMensuality(state.loanAmount, state.loanLength, state.loanRate)
-  console.log(mensuality)
   const totalPaidBack = mensuality * state.loanLength * 12
   const totalLoanInterests = computeTotalLoanInterest(mensuality, state.loanLength, state.loanAmount)
   const loanInterestPerYear = totalLoanInterests / state.loanLength
@@ -128,7 +139,7 @@ const IndexPage = () => {
         <Row>
           {/* BIEN: INPUT */}
           <Col xs={12} md={6}>
-            <Tile height={200} title={"Bien"}>
+            <Tile height={300} title={"Bien"}>
               <SliderWithTitle
                 title={"Prix"}
                 unit={"€"}
@@ -139,12 +150,20 @@ const IndexPage = () => {
               />
 
               <SliderWithTitle
-                title={"Travaux à effectuer"}
+                title={"Travaux à l'achat"}
                 unit={"€"}
                 min={0}
                 max={200000}
-                onChange={e => updateState('houseBuildingWork', Number(e.target.value))}
-                value={state.houseBuildingWork}
+                onChange={e => updateState('initialHouseBuildingWork', Number(e.target.value))}
+                value={state.initialHouseBuildingWork}
+              />
+              <SliderWithTitle
+                title={"Travaux d'entretien estimés"}
+                unit={"€ / an"}
+                min={0}
+                max={10000}
+                onChange={e => updateState('annualHouseBuildingWork', Number(e.target.value))}
+                value={state.annualHouseBuildingWork}
               />
 
               <SliderWithTitle
@@ -154,6 +173,14 @@ const IndexPage = () => {
                 max={300}
                 onChange={e => updateState('surface', Number(e.target.value))}
                 value={state.surface}
+              />
+              <SliderWithTitle
+                title={"Taxe foncière"}
+                unit={"€ / an"}
+                min={0}
+                max={10000}
+                onChange={e => updateState('taxeFonciere', Number(e.target.value))}
+                value={state.taxeFonciere}
               />
               <Form.Check
                 custom
@@ -171,8 +198,14 @@ const IndexPage = () => {
             <Tile height={150} title={"Prix"} >
               <ClassicNumber value={Math.round(pricePerSquareMeter)} suffix={"€ / m2"} size={50} />
             </Tile>
+            <br />
+            <Tile height={150} title={"Frais de notaire"} >
+              <ClassicNumber value={Math.round(notarialFee)} suffix={"€"} size={50} />
+            </Tile>
           </Col>
         </Row>
+
+
 
         <br />
 
@@ -228,8 +261,8 @@ const IndexPage = () => {
 
           {/* LOCATION: OUTPUT */}
           <Col xs={12} md={6}>
-            <Tile height={140} title={"Rentabilite net net"} explanation={<RentabiliteNetNetExplanationModal />} >
-              <ColoredNumber value={rentabiliteNetNet} suffix={"%"} />
+            <Tile height={140} title={"Rentabilite nette nette"} explanation={<RentabiliteNetNetExplanationModal />} >
+              <ColoredNumber value={Math.round(rentabiliteNetNet * 100) / 100} suffix={"%"} />
             </Tile>
             <br />
             <Row>
@@ -239,8 +272,8 @@ const IndexPage = () => {
                 </Tile>
               </Col>
               <Col xs={12} md={6}>
-                <Tile height={75} title={"Net"} >
-                  <ClassicNumber value={rentabiliteNet} suffix={"%"} size={30} />
+                <Tile height={75} title={"Nette de charge"} >
+                  <ClassicNumber value={Math.round(rentabiliteNet * 100) / 100} suffix={"%"} size={30} />
                 </Tile>
               </Col>
             </Row>

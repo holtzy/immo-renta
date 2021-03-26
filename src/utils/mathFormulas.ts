@@ -44,7 +44,11 @@ export const computeTotalLoanInterest = (mensuality: number, loanLength: number,
     return (mensuality * loanLength * 12) - amount
 }
 
+export const computeNetNetRentability = (fiscalityType: string, annualRent: number, taxSurplus: number) => {
 
-export const computeLoanTable = (amount: number, loanLength: number, rate: number) => {
+    // Forbidden if annualRent > 15000
+    if (fiscalityType === "nonMeubleMicro") {
+        return (annualRent * 0.7)
 
+    }
 }

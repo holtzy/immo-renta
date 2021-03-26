@@ -126,10 +126,9 @@ const IndexPage = () => {
         <br />
 
         <Row>
-
-          {/* BIEN */}
+          {/* BIEN: INPUT */}
           <Col xs={12} md={6}>
-            <Tile height={230} title={"Bien"}>
+            <Tile height={200} title={"Bien"}>
               <SliderWithTitle
                 title={"Prix"}
                 unit={"€"}
@@ -138,29 +137,16 @@ const IndexPage = () => {
                 onChange={e => updateState('price', Number(e.target.value))}
                 value={state.price}
               />
-              <Row>
-                <Col xs={12} md={5}>
-                  <br />
-                  <Form.Check
-                    custom
-                    type={'checkbox'}
-                    id={`custom-checkbox`}
-                    label={`Le bien est neuf`}
-                    checked={state.isHouseBrandNew}
-                    onChange={e => updateState('isHouseBrandNew', !state.isHouseBrandNew)}
-                  />
-                </Col>
-                <Col xs={12} md={7}>
-                  <SliderWithTitle
-                    title={"Travaux à effectuer"}
-                    unit={"€"}
-                    min={0}
-                    max={200000}
-                    onChange={e => updateState('houseBuildingWork', Number(e.target.value))}
-                    value={state.houseBuildingWork}
-                  />
-                </Col>
-              </Row>
+
+              <SliderWithTitle
+                title={"Travaux à effectuer"}
+                unit={"€"}
+                min={0}
+                max={200000}
+                onChange={e => updateState('houseBuildingWork', Number(e.target.value))}
+                value={state.houseBuildingWork}
+              />
+
               <SliderWithTitle
                 title={"Surface"}
                 unit={"m2"}
@@ -169,12 +155,32 @@ const IndexPage = () => {
                 onChange={e => updateState('surface', Number(e.target.value))}
                 value={state.surface}
               />
+              <Form.Check
+                custom
+                type={'checkbox'}
+                id={`custom-checkbox`}
+                label={`Le bien est neuf`}
+                checked={state.isHouseBrandNew}
+                onChange={e => updateState('isHouseBrandNew', !state.isHouseBrandNew)}
+              />
             </Tile>
+          </Col>
 
-            <br />
+          {/* BIEN: OUTPUT */}
+          <Col xs={12} md={6}>
+            <Tile height={150} title={"Prix"} >
+              <ClassicNumber value={Math.round(pricePerSquareMeter)} suffix={"€ / m2"} size={50} />
+            </Tile>
+          </Col>
+        </Row>
 
-            {/* LOCATION */}
-            <Tile height={230} title={"Location"}>
+        <br />
+
+        <Row>
+
+          {/* LOCATION: INPUT */}
+          <Col xs={12} md={6}>
+            <Tile height={260} title={"Location"}>
               <SliderWithTitle
                 title={"Loyer"}
                 unit={"€ / mois"}
@@ -183,51 +189,71 @@ const IndexPage = () => {
                 onChange={e => updateState('rent', Number(e.target.value))}
                 value={state.rent}
               />
-              <Row>
-                <Col xs={12} md={6}>
-                  <SliderWithTitle
-                    title={"Frais agence"}
-                    unit={"€ / mois"}
-                    min={0}
-                    max={1000}
-                    onChange={e => updateState('agencyMensualFee', Number(e.target.value))}
-                    value={state.agencyMensualFee}
-                  />
-                </Col>
-                <Col xs={12} md={6}>
-                  <SliderWithTitle
-                    title={"Mois sans locataire"}
-                    unit={"nombre"}
-                    min={0}
-                    max={12}
-                    onChange={e => updateState('monthsWithNoRent', Number(e.target.value))}
-                    value={state.monthsWithNoRent}
-                  />
-                </Col>
-              </Row>
-              <Row>
-                <Col xs={12} md={6}>
-                  <SliderWithTitle
-                    title={"Charge du proprio"}
-                    unit={"€ / mois"}
-                    min={0}
-                    max={1000}
-                    onChange={e => updateState('ownerMensualFees', Number(e.target.value))}
-                    value={state.ownerMensualFees}
-                  />
-                </Col>
-                <Col xs={12} md={6}>
-                  <SliderWithTitle
-                    title={"Charge récup."}
-                    unit={"€ / mois"}
-                    min={0}
-                    max={1000}
-                    onChange={e => updateState('refundableMensualFees', Number(e.target.value))}
-                    value={state.refundableMensualFees}
-                  />
-                </Col>
-              </Row>
+              <SliderWithTitle
+                title={"Frais agence"}
+                unit={"€ / mois"}
+                min={0}
+                max={1000}
+                onChange={e => updateState('agencyMensualFee', Number(e.target.value))}
+                value={state.agencyMensualFee}
+              />
+              <SliderWithTitle
+                title={"Mois sans locataire"}
+                unit={"nombre"}
+                min={0}
+                max={12}
+                onChange={e => updateState('monthsWithNoRent', Number(e.target.value))}
+                value={state.monthsWithNoRent}
+              />
+              <SliderWithTitle
+                title={"Charge du proprio"}
+                unit={"€ / mois"}
+                min={0}
+                max={1000}
+                onChange={e => updateState('ownerMensualFees', Number(e.target.value))}
+                value={state.ownerMensualFees}
+              />
+
+              <SliderWithTitle
+                title={"Charge récup."}
+                unit={"€ / mois"}
+                min={0}
+                max={1000}
+                onChange={e => updateState('refundableMensualFees', Number(e.target.value))}
+                value={state.refundableMensualFees}
+              />
+
             </Tile>
+          </Col>
+
+          {/* LOCATION: OUTPUT */}
+          <Col xs={12} md={6}>
+            <Tile height={140} title={"Rentabilite net net"} explanation={<RentabiliteNetNetExplanationModal />} >
+              <ColoredNumber value={rentabiliteNetNet} suffix={"%"} />
+            </Tile>
+            <br />
+            <Row>
+              <Col xs={12} md={6}>
+                <Tile height={75} title={"Brute"} explanation={<RentabiliteBruteExplanationModal />} >
+                  <ClassicNumber value={Math.round(rentabiliteBrute * 100) / 100} suffix={"%"} size={30} />
+                </Tile>
+              </Col>
+              <Col xs={12} md={6}>
+                <Tile height={75} title={"Net"} >
+                  <ClassicNumber value={rentabiliteNet} suffix={"%"} size={30} />
+                </Tile>
+              </Col>
+            </Row>
+          </Col>
+
+        </Row>
+
+        <br />
+
+        <Row>
+
+          <Col xs={12} md={6}>
+
 
             <br />
 
@@ -324,32 +350,6 @@ const IndexPage = () => {
 
           <Col xs={12} md={6}>
 
-            {/* RESULT: LOCATION */}
-            <Tile height={150} title={"Prix"} >
-              <ClassicNumber value={Math.round(pricePerSquareMeter)} suffix={"€ / m2"} size={50} />
-            </Tile>
-
-            <br />
-
-            {/* RESULT: RENTA */}
-            <Tile height={200} title={"Rentabilite net net"} explanation={<RentabiliteNetNetExplanationModal />} >
-              <ColoredNumber value={rentabiliteNetNet} suffix={"%"} />
-            </Tile>
-            <br />
-            <Row>
-              <Col xs={12} md={6}>
-                <Tile height={150} title={"Brute"} explanation={<RentabiliteBruteExplanationModal />} >
-                  <ClassicNumber value={Math.round(rentabiliteBrute * 100) / 100} suffix={"%"} size={50} size={50} />
-                </Tile>
-              </Col>
-              <Col xs={12} md={6}>
-                <Tile height={150} title={"Net"} >
-                  <ClassicNumber value={rentabiliteNet} suffix={"%"} size={50} />
-                </Tile>
-              </Col>
-            </Row>
-
-            <br />
 
             {/* RESULT: IMPOTS */}
             <Row>
@@ -402,7 +402,7 @@ const IndexPage = () => {
         </Row>
 
         <Spacing />
-      </Container>
+      </Container >
 
     </Layout >
   )

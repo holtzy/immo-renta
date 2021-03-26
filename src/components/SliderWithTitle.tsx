@@ -25,21 +25,22 @@ export const SliderWithTitle = ({
 
     return (
         <Form.Group>
-
-            <div>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
                 <span className={"slider-with-title-title"}>{title}</span>
                 <span className={"slider-with-title-unit"}>{unit}</span>
-            </div>
-            <div style={{ display: "flex" }}>
-
-                <Form.Control
-                    size="sm"
-                    type="text"
-                    value={value}
-                    onChange={onChange}
-                />
                 <div style={{
-                    width: '300px',
+                    width: '100px',
+                    marginLeft: '20px'
+                }}>
+                    <Form.Control
+                        size="sm"
+                        type="text"
+                        value={value}
+                        onChange={onChange}
+                    />
+                </div>
+                <div style={{
+                    width: '50px',
                     marginLeft: '20px'
                 }}>
                     < Form.Control
@@ -52,6 +53,7 @@ export const SliderWithTitle = ({
                     />
                 </div>
             </div>
+
         </Form.Group>
     )
 

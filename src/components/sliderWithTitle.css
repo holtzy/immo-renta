@@ -15,5 +15,13 @@
     margin-left: 10px;
 }
 
+.slider-with-title-checkbox {
+    margin-left: 10px;
+}
+
+.slider-with-title-checkbox .custom-checkbox .custom-control-label {
+    padding-top: 3px;
+    font-size: 12px;
+}
 
 

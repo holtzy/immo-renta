@@ -1,4 +1,5 @@
 import "../styles/slider.less";
+import "../styles/checkbox.less";
 import "./sliderWithTitle.css";
 
 import React from "react";
@@ -47,15 +48,16 @@ export const SliderWithTitle = ({
                         />
                     </div>
                     {hasAutoEstimate &&
-                        <div>
+                        <div className={"slider-with-title-checkbox"}>
                             <Form.Check
                                 custom
                                 type={'checkbox'}
-                                id={`custom-checkbox`}
                                 label={`Estimation auto`}
                                 checked={disabled}
+                                id={`auto-estimate-checkbox`}
                                 onChange={onAutoEstimateChange}
-                            /></div>}
+                            />
+                        </div>}
                 </div>
 
                 {!hasAutoEstimate && <div style={{ width: '50px', marginLeft: '20px' }}>

@@ -13,6 +13,9 @@ type SliderWithTitleProps = {
     min: number;
     max: number;
     onChange: (e: any) => void;
+    disabled?: boolean;
+    hasAutoEstimate?: boolean;
+    onAutoEstimateChange?: (e: any) => void;
 }
 
 export const SliderWithTitle = ({
@@ -21,12 +24,16 @@ export const SliderWithTitle = ({
     unit,
     min,
     max,
-    onChange
+    onChange,
+    disabled,
+    hasAutoEstimate,
+    onAutoEstimateChange
 }: SliderWithTitleProps) => {
 
     return (
         <Form.Group>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'left' }}>
                     <span className={"slider-with-title-title"}>{title}</span>
                     <span className={"slider-with-title-unit"}>{unit}</span>
@@ -36,11 +43,22 @@ export const SliderWithTitle = ({
                             type="text"
                             value={formatNumberWithThousands(value)}
                             onChange={onChange}
+                            disabled={disabled}
                         />
                     </div>
+                    {hasAutoEstimate &&
+                        <div>
+                            <Form.Check
+                                custom
+                                type={'checkbox'}
+                                id={`custom-checkbox`}
+                                label={`Estimation auto`}
+                                checked={disabled}
+                                onChange={onAutoEstimateChange}
+                            /></div>}
                 </div>
 
-                <div style={{ width: '50px', marginLeft: '20px' }}>
+                {!hasAutoEstimate && <div style={{ width: '50px', marginLeft: '20px' }}>
                     < Form.Control
                         type="range"
                         value={value}
@@ -49,7 +67,7 @@ export const SliderWithTitle = ({
                         min={min}
                         max={max}
                     />
-                </div>
+                </div>}
             </div>
 
         </Form.Group>

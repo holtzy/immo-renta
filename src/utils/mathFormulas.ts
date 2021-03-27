@@ -52,3 +52,7 @@ export const computeNetNetRentability = (fiscalityType: string, annualRent: numb
 
     }
 }
+
+export const computeTaxFonciere = (rent: number) => {
+    return rent
+}

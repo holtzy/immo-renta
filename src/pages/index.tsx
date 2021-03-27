@@ -9,10 +9,12 @@ import Tile from "../components/Tile";
 import { SliderWithTitle } from "../components/SliderWithTitle";
 import { SelectWithTitle } from "../components/SelectWithTitle";
 import { ColoredNumber } from "../components/ColoredNumber";
+import { ClassicNumber } from "../components/ClassicNumber";
 import Layout from "../components/Layout";
 import Spacing from "../components/Spacing";
 import { RentabiliteBruteExplanationModal, RentabiliteNetNetExplanationModal } from "../components/ExplanationModals"
-import { computeAnnualTaxes, computeMensuality, computeTotalLoanInterest, computeNetNetRentability } from '../utils/mathFormulas'
+
+import { computeTaxFonciere, computeAnnualTaxes, computeMensuality, computeTotalLoanInterest, computeNetNetRentability } from '../utils/mathFormulas'
 import { formatNumberWithThousands, formatNumberWithoutThousands } from '../utils/utils'
 
 type InitialState = {
@@ -32,10 +34,10 @@ type InitialState = {
   loanAmount: number;
   loanLength: number;
   loanRate: number;
-  taxeFonciere: number;
+  taxeFonciere?: number;
 }
 
-const initialState = {
+const initialState: InitialState = {
   surface: 40,
   price: 98000,
   rent: 400,
@@ -52,8 +54,8 @@ const initialState = {
   loanAmount: 0,
   loanLength: 20,
   loanRate: 1.5,
-  taxeFonciere: 100
 }
+initialState.taxeFonciere = initialState.rent
 
 const fiscalOptions = [
   { value: 'meuble', label: 'Meublé non professionel' },
@@ -73,40 +75,27 @@ const numberOfFiscalPeopleOptions =
     { value: 4.5, label: '4.5' },
   ]
 
-const ClassicNumber = ({ suffix, value, size }) => {
-  return (
-    <div style={{
-      width: '100%',
-      height: '100%',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center'
-    }}>
-      <div>
-        <span style={{ fontSize: size, fontWeight: 'bold' }}>{value}</span>
-        <span>{suffix}</span>
-      </div>
-    </div>
-  )
-}
-
-
 
 const IndexPage = () => {
 
+  // States
   const [state, setState] = React.useState<InitialState>(initialState)
-
   const updateState = (item: string, value: any) => {
     const newState = { ...state, [item]: value }
+    // Some variables of the state potentially need to be autocomputed
+    if (isTaxeFonciereAutoComputed) {
+      newState.taxeFonciere = computeTaxFonciere(state.rent) // todo how to compute this?
+    }
     setState(newState)
   }
+  const [isTaxeFonciereAutoComputed, setIsTaxeFonciereAutoComputed] = React.useState(true)
 
+  // Values computed from state
   const pricePerSquareMeter = state.price / state.surface
   const annualRent = Number(state.rent) * 12 - state.rent * state.monthsWithNoRent
-
   const notarialFee = state.isHouseBrandNew ? state.price * 4 / 100 : state.price * 8 / 100
 
-  // Impots
+  // Taxes
   const initialAnnualTax = computeAnnualTaxes(state.netAnnualRevenu, state.numberOfFiscalPeople)
   const loyerImposable = state.fiscality === "nonMeubleMicro" ?
     annualRent * 0.7 :
@@ -116,12 +105,12 @@ const IndexPage = () => {
   const withLocationAnnualTax = computeAnnualTaxes((state.netAnnualRevenu + loyerImposable), state.numberOfFiscalPeople)
   const taxSurplus = withLocationAnnualTax - initialAnnualTax
 
-  // Rentabilités
+  // Rentability
   const rentabiliteBrute = annualRent / (state.price + state.initialHouseBuildingWork + notarialFee) * 100
   const rentabiliteNet = (annualRent - 12 * state.agencyMensualFee - 12 * state.ownerMensualFees - state.taxeFonciere) / state.price * 100
   const rentabiliteNetNet = computeNetNetRentability(state.fiscality, annualRent, taxSurplus)
 
-  // Pret
+  // Loan
   const mensuality = computeMensuality(state.loanAmount, state.loanLength, state.loanRate)
   const totalPaidBack = mensuality * state.loanLength * 12
   const totalLoanInterests = computeTotalLoanInterest(mensuality, state.loanLength, state.loanAmount)
@@ -150,7 +139,6 @@ const IndexPage = () => {
                 onChange={e => updateState('price', formatNumberWithoutThousands(e.target.value))}
                 value={state.price}
               />
-
               <SliderWithTitle
                 title={"Travaux à l'achat"}
                 unit={"€"}
@@ -182,7 +170,16 @@ const IndexPage = () => {
                 min={0}
                 max={10000}
                 onChange={e => updateState('taxeFonciere', formatNumberWithoutThousands(e.target.value))}
-                value={state.taxeFonciere}
+                value={Math.round(state.taxeFonciere)}
+                disabled={isTaxeFonciereAutoComputed}
+                hasAutoEstimate
+                onAutoEstimateChange={e => {
+                  // If I switch to auto estimate, I have to estimate the tax!
+                  if (!isTaxeFonciereAutoComputed) {
+                    updateState('taxeFonciere', computeTaxFonciere(state.rent))
+                  }
+                  setIsTaxeFonciereAutoComputed(!isTaxeFonciereAutoComputed)
+                }}
               />
               <Form.Check
                 custom

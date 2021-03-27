@@ -160,7 +160,7 @@ const IndexPage = () => {
               />
               <SliderWithTitle
                 title={"Travaux d'entretien estimés"}
-                unit={"€ / an"}
+                unit={"€/an"}
                 min={0}
                 max={10000}
                 onChange={e => updateState('annualHouseBuildingWork', Number(e.target.value))}
@@ -177,7 +177,7 @@ const IndexPage = () => {
               />
               <SliderWithTitle
                 title={"Taxe foncière"}
-                unit={"€ / an"}
+                unit={"€/an"}
                 min={0}
                 max={10000}
                 onChange={e => updateState('taxeFonciere', Number(e.target.value))}

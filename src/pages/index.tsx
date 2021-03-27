@@ -13,6 +13,7 @@ import Layout from "../components/Layout";
 import Spacing from "../components/Spacing";
 import { RentabiliteBruteExplanationModal, RentabiliteNetNetExplanationModal } from "../components/ExplanationModals"
 import { computeAnnualTaxes, computeMensuality, computeTotalLoanInterest, computeNetNetRentability } from '../utils/mathFormulas'
+import { formatNumberWithThousands, formatNumberWithoutThousands } from '../utils/utils'
 
 type InitialState = {
   surface: number;
@@ -146,7 +147,7 @@ const IndexPage = () => {
                 unit={"€"}
                 min={30000}
                 max={2000000}
-                onChange={e => updateState('price', Number(e.target.value))}
+                onChange={e => updateState('price', formatNumberWithoutThousands(e.target.value))}
                 value={state.price}
               />
 
@@ -155,7 +156,7 @@ const IndexPage = () => {
                 unit={"€"}
                 min={0}
                 max={200000}
-                onChange={e => updateState('initialHouseBuildingWork', Number(e.target.value))}
+                onChange={e => updateState('initialHouseBuildingWork', formatNumberWithoutThousands(e.target.value))}
                 value={state.initialHouseBuildingWork}
               />
               <SliderWithTitle
@@ -163,7 +164,7 @@ const IndexPage = () => {
                 unit={"€/an"}
                 min={0}
                 max={10000}
-                onChange={e => updateState('annualHouseBuildingWork', Number(e.target.value))}
+                onChange={e => updateState('annualHouseBuildingWork', formatNumberWithoutThousands(e.target.value))}
                 value={state.annualHouseBuildingWork}
               />
 
@@ -172,7 +173,7 @@ const IndexPage = () => {
                 unit={"m2"}
                 min={7}
                 max={300}
-                onChange={e => updateState('surface', Number(e.target.value))}
+                onChange={e => updateState('surface', formatNumberWithoutThousands(e.target.value))}
                 value={state.surface}
               />
               <SliderWithTitle
@@ -180,7 +181,7 @@ const IndexPage = () => {
                 unit={"€/an"}
                 min={0}
                 max={10000}
-                onChange={e => updateState('taxeFonciere', Number(e.target.value))}
+                onChange={e => updateState('taxeFonciere', formatNumberWithoutThousands(e.target.value))}
                 value={state.taxeFonciere}
               />
               <Form.Check
@@ -197,11 +198,17 @@ const IndexPage = () => {
           {/* BIEN: OUTPUT */}
           <Col xs={12} md={6}>
             <Tile height={150} title={"Prix"} >
-              <ClassicNumber value={Math.round(pricePerSquareMeter)} suffix={"€ / m2"} size={50} />
+              <ClassicNumber
+                value={formatNumberWithThousands(Math.round(pricePerSquareMeter))}
+                suffix={"€ / m2"}
+                size={50} />
             </Tile>
             <br />
             <Tile height={150} title={"Frais de notaire"} >
-              <ClassicNumber value={Math.round(notarialFee)} suffix={"€"} size={50} />
+              <ClassicNumber
+                value={formatNumberWithThousands(Math.round(notarialFee))}
+                suffix={"€"}
+                size={50} />
             </Tile>
           </Col>
         </Row>
@@ -221,7 +228,7 @@ const IndexPage = () => {
                 unit={"€ / mois"}
                 min={100}
                 max={4000}
-                onChange={e => updateState('rent', Number(e.target.value))}
+                onChange={e => updateState('rent', formatNumberWithoutThousands(e.target.value))}
                 value={state.rent}
               />
               <SliderWithTitle
@@ -229,7 +236,7 @@ const IndexPage = () => {
                 unit={"€ / mois"}
                 min={0}
                 max={1000}
-                onChange={e => updateState('agencyMensualFee', Number(e.target.value))}
+                onChange={e => updateState('agencyMensualFee', formatNumberWithoutThousands(e.target.value))}
                 value={state.agencyMensualFee}
               />
               <SliderWithTitle
@@ -237,7 +244,7 @@ const IndexPage = () => {
                 unit={"nombre"}
                 min={0}
                 max={12}
-                onChange={e => updateState('monthsWithNoRent', Number(e.target.value))}
+                onChange={e => updateState('monthsWithNoRent', formatNumberWithoutThousands(e.target.value))}
                 value={state.monthsWithNoRent}
               />
               <SliderWithTitle
@@ -245,7 +252,7 @@ const IndexPage = () => {
                 unit={"€ / mois"}
                 min={0}
                 max={1000}
-                onChange={e => updateState('ownerMensualFees', Number(e.target.value))}
+                onChange={e => updateState('ownerMensualFees', formatNumberWithoutThousands(e.target.value))}
                 value={state.ownerMensualFees}
               />
 
@@ -254,7 +261,7 @@ const IndexPage = () => {
                 unit={"€ / mois"}
                 min={0}
                 max={1000}
-                onChange={e => updateState('refundableMensualFees', Number(e.target.value))}
+                onChange={e => updateState('refundableMensualFees', formatNumberWithoutThousands(e.target.value))}
                 value={state.refundableMensualFees}
               />
 
@@ -296,7 +303,7 @@ const IndexPage = () => {
                 unit={"€/an"}
                 min={10000}
                 max={300000}
-                onChange={e => updateState('netAnnualRevenu', Number(e.target.value))}
+                onChange={e => updateState('netAnnualRevenu', formatNumberWithoutThousands(e.target.value))}
                 value={state.netAnnualRevenu}
               />
 
@@ -346,7 +353,7 @@ const IndexPage = () => {
                 unit={"€"}
                 min={0}
                 max={state.price}
-                onChange={e => updateState('loanAmount', Number(e.target.value))}
+                onChange={e => updateState('loanAmount', formatNumberWithoutThousands(e.target.value))}
                 value={state.loanAmount}
               />
               <SliderWithTitle
@@ -354,7 +361,7 @@ const IndexPage = () => {
                 unit={"Années"}
                 min={0}
                 max={25}
-                onChange={e => updateState('loanLength', Number(e.target.value))}
+                onChange={e => updateState('loanLength', formatNumberWithoutThousands(e.target.value))}
                 value={state.loanLength}
               />
               <SliderWithTitle
@@ -362,7 +369,7 @@ const IndexPage = () => {
                 unit={"%"}
                 min={0.2}
                 max={8}
-                onChange={e => updateState('loanRate', Number(e.target.value))}
+                onChange={e => updateState('loanRate', formatNumberWithoutThousands(e.target.value))}
                 value={state.loanRate}
               />
             </Tile>

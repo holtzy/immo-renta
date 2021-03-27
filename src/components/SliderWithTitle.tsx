@@ -3,6 +3,7 @@ import "./sliderWithTitle.css";
 
 import React from "react";
 import Form from "react-bootstrap/Form";
+import { formatNumberWithThousands } from '../utils/utils'
 
 
 type SliderWithTitleProps = {
@@ -33,7 +34,7 @@ export const SliderWithTitle = ({
                         <Form.Control
                             size="sm"
                             type="text"
-                            value={value}
+                            value={formatNumberWithThousands(value)}
                             onChange={onChange}
                         />
                     </div>

@@ -12,7 +12,7 @@ import { ColoredNumber } from "../components/ColoredNumber";
 import { ClassicNumber } from "../components/ClassicNumber";
 import Layout from "../components/Layout";
 import Spacing from "../components/Spacing";
-import { RentabiliteBruteExplanationModal, RentabiliteNetNetExplanationModal } from "../components/ExplanationModals"
+import { RentabiliteBruteExplanationModal, RentabiliteNetNetExplanationModal, NewVsOldHouseExplanationModal } from "../components/ExplanationModals"
 
 import { computeTaxFonciere, computeAnnualTaxes, computeMensuality, computeTotalLoanInterest, computeNetNetRentability } from '../utils/mathFormulas'
 import { formatNumberWithThousands, formatNumberWithoutThousands } from '../utils/utils'
@@ -94,6 +94,7 @@ const IndexPage = () => {
   const pricePerSquareMeter = state.price / state.surface
   const annualRent = Number(state.rent) * 12 - state.rent * state.monthsWithNoRent
   const notarialFee = state.isHouseBrandNew ? state.price * 4 / 100 : state.price * 8 / 100
+  const totalPrice = state.price + notarialFee + state.initialHouseBuildingWork
 
   // Taxes
   const initialAnnualTax = computeAnnualTaxes(state.netAnnualRevenu, state.numberOfFiscalPeople)
@@ -130,7 +131,7 @@ const IndexPage = () => {
         <Row>
           {/* BIEN: INPUT */}
           <Col xs={12} md={6}>
-            <Tile height={300} title={"Bien"}>
+            <Tile height={280} title={"Bien"}>
               <SliderWithTitle
                 title={"Prix"}
                 unit={"€"}
@@ -155,10 +156,9 @@ const IndexPage = () => {
                 onChange={e => updateState('annualHouseBuildingWork', formatNumberWithoutThousands(e.target.value))}
                 value={state.annualHouseBuildingWork}
               />
-
               <SliderWithTitle
                 title={"Surface"}
-                unit={"m2"}
+                unit={"m²"}
                 min={7}
                 max={300}
                 onChange={e => updateState('surface', formatNumberWithoutThousands(e.target.value))}
@@ -181,32 +181,55 @@ const IndexPage = () => {
                   setIsTaxeFonciereAutoComputed(!isTaxeFonciereAutoComputed)
                 }}
               />
-              <Form.Check
-                custom
-                type={'checkbox'}
-                id={`custom-checkbox`}
-                label={`Le bien est neuf`}
-                checked={state.isHouseBrandNew}
-                onChange={e => updateState('isHouseBrandNew', !state.isHouseBrandNew)}
-              />
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <Form.Check
+                  custom
+                  type={'checkbox'}
+                  id={`custom-checkbox`}
+                  label={`Le bien est neuf`}
+                  checked={state.isHouseBrandNew}
+                  onChange={e => updateState('isHouseBrandNew', !state.isHouseBrandNew)}
+                />
+                <NewVsOldHouseExplanationModal />
+              </div>
             </Tile>
           </Col>
 
           {/* BIEN: OUTPUT */}
           <Col xs={12} md={6}>
-            <Tile height={150} title={"Prix"} >
-              <ClassicNumber
-                value={formatNumberWithThousands(Math.round(pricePerSquareMeter))}
-                suffix={"€ / m2"}
-                size={50} />
-            </Tile>
+            <Row>
+              <Col xs={12} md={6}>
+                <Tile height={121} title={"Prix au m²"} >
+                  <ClassicNumber
+                    value={formatNumberWithThousands(Math.round(pricePerSquareMeter))}
+                    suffix={"€/m²"}
+                    size={40} />
+                </Tile>
+              </Col>
+              <Col xs={12} md={6}>
+                <Tile height={121} title={"Frais de notaire"} >
+                  <ClassicNumber
+                    value={formatNumberWithThousands(Math.round(notarialFee))}
+                    suffix={"€"}
+                    size={40} />
+                </Tile>
+              </Col>
+            </Row>
             <br />
-            <Tile height={150} title={"Frais de notaire"} >
-              <ClassicNumber
-                value={formatNumberWithThousands(Math.round(notarialFee))}
-                suffix={"€"}
-                size={50} />
-            </Tile>
+            <Row>
+              <Col xs={12} md={6}>
+                <Tile height={121} title={"Prix total"} >
+                  <ClassicNumber
+                    value={formatNumberWithThousands(Math.round(totalPrice))}
+                    suffix={"€"}
+                    size={40} />
+                </Tile>
+              </Col>
+              <Col xs={12} md={6}>
+
+              </Col>
+            </Row>
+
           </Col>
         </Row>
 

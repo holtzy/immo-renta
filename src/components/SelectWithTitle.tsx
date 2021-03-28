@@ -28,7 +28,7 @@ export const SelectWithTitle = ({
     return (
         <Form.Group>
             <div >
-                <p className={"select-with-title-title"}>{title} {explanation}
+                <p className={"select-with-title-title"}>{title}{explanation}
                 </p>
                 <div style={{ width: '100%', marginRight: 4 }}>
                     <Select

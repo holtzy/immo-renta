@@ -3,6 +3,7 @@
 }
 
 .explanation-modal-button {
-    font-size: 12px;
+    font-size: 15px;
     cursor: pointer;
+    margin-left: 9px;
 }

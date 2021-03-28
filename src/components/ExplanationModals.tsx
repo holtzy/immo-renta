@@ -50,3 +50,32 @@ export const RentabiliteNetNetExplanationModal = () => {
         </>
     )
 }
+
+export const NewVsOldHouseExplanationModal = () => {
+    const [isOpen, setIsOpen] = React.useState(false)
+    return (
+        <>
+            <span className={'explanation-modal-button'} onClick={() => setIsOpen(true)}>
+                🤔
+            </span>
+            <Modal show={isOpen} onHide={() => setIsOpen(false)}>
+                <Modal.Body>
+                    <h2>Bien neuf ou bien ancien ?</h2>
+                    <p>
+                        L' ancienneté du bien que vous vous apprêtez à acheter a de l'importance pour 2
+                        raisons principales.
+                    </p>
+                    <ul>
+                        <li>
+                            <p><b>Frais de Notaire</b>: Les frais de notaires s'élèvent à <code>4%</code> de la valeur du bien
+                        pour un bien neuf, contre <code>8%</code> pour un bien ancien. <a href='h'>source</a></p>
+                        </li>
+                        <br />
+                        <li><b>Avantage fiscaux</b>: certains types de déclarations fiscales comme la loi Pinel ne sont
+                        accessible que pour des bien neufs.</li>
+                    </ul>
+                </Modal.Body>
+            </Modal>
+        </>
+    )
+}

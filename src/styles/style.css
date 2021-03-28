@@ -2,6 +2,8 @@
 :root {
     --navbar-height: 45px;
     --mode-transform-duration: 2.5s;
+    --normal-font-size: 15
+    px;
 
     /* raw colors */
     --light-grey:  #f8f9fa;
@@ -29,12 +31,12 @@ body.dark {
     --text-vibrant: var(--light-purple);
     --text-normal: white;
     --footer-color: var(--light-black);
-
 }
 
 
 body {
     overflow-x: hidden;
+    font-size: var(--normal-font-size) !important;
     font-family: 'Roboto' !important;
     background-color: var(--background-dark) !important;
     transition: all var(--mode-transform-duration) ease;
@@ -86,11 +88,7 @@ span {
 
 
 a {
-    color: var(--python-gallery) !important;
-}
-
-a:hover {
-    color: #251667 !important;
+    color: var(--text-vibrant) !important;
 }
 
 /* ---------- Button ----------------- */

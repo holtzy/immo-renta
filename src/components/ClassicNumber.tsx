@@ -3,7 +3,7 @@ import React from "react";
 
 type ClassicNumberProps = {
     suffix: string;
-    value: number;
+    value: string;
     size: number;
 }
 

@@ -196,9 +196,9 @@ const IndexPage = () => {
             </Tile>
           </Col>
 
-          {/* BIEN: OUTPUT */}
-          <Col xs={12} md={6}>
-            <Row>
+          {/* BIEN: OUTPUT LARGE SCREEN */}
+          <Col xs={12} md={6} className={"d-none d-xs-none d-sm-none d-md-block"}>
+            <Row >
               <Col xs={12} md={6}>
                 <Tile height={121} title={"Prix au m²"} >
                   <ClassicNumber
@@ -229,7 +229,22 @@ const IndexPage = () => {
 
               </Col>
             </Row>
+          </Col>
 
+          {/* BIEN: OUTPUT SMALL SCREEN */}
+          <Col xs={12} md={6} className={"d-xs-block d-sm-block d-md-none"}>
+            <Tile height={90} title={""} >
+              <p>
+                <span>&rarr; Le prix total de votre bien s'élève à </span>
+                <span><code>{formatNumberWithThousands(Math.round(totalPrice))}</code></span>
+                <span> euros. Il inclut </span>
+                <span><code>{formatNumberWithThousands(Math.round(notarialFee))}</code></span>
+                <span> euros de frais de notaire. Cela représente </span>
+                <span><code>{formatNumberWithThousands(Math.round(pricePerSquareMeter))}</code></span>
+                <span> euros par m2.</span>
+              }
+              </p>
+            </Tile>
           </Col>
         </Row>
 
@@ -248,7 +263,7 @@ const IndexPage = () => {
                 unit={"€"}
                 min={0}
                 max={state.price}
-                onChange={e => updateState('loanAmount', formatNumberWithoutThousands(e.target.value))}
+                onChange={e => updateState('loanAmount', formatNumberWithThousands(e.target.value))}
                 value={state.loanAmount}
               />
               <SliderWithTitle
@@ -256,7 +271,7 @@ const IndexPage = () => {
                 unit={"Années"}
                 min={0}
                 max={25}
-                onChange={e => updateState('loanLength', formatNumberWithoutThousands(e.target.value))}
+                onChange={e => updateState('loanLength', formatNumberWithThousands(e.target.value))}
                 value={state.loanLength}
               />
               <SliderWithTitle
@@ -264,33 +279,57 @@ const IndexPage = () => {
                 unit={"%"}
                 min={0.2}
                 max={8}
-                onChange={e => updateState('loanRate', formatNumberWithoutThousands(e.target.value))}
+                onChange={e => updateState('loanRate', formatNumberWithThousands(e.target.value))}
                 value={state.loanRate}
               />
             </Tile>
           </Col>
-          {/* EMPRUNT: OUTPUT*/}
-          <Col xs={12} md={6}>
+
+          {/* EMPRUNT: OUTPUT BIG SCREEN*/}
+          <Col xs={12} md={6} className={"d-none d-xs-none d-sm-none d-md-block"}>
             <Tile height={75} title={"Intéret annuel"} explanation={<RentabiliteBruteExplanationModal />} >
-              <ClassicNumber value={Math.round(loanInterestPerYear)} suffix={"€"} size={50} />
+              <ClassicNumber value={formatNumberWithThousands(Math.round(loanInterestPerYear))} suffix={"€"} size={50} />
             </Tile>
             <Row>
               <Col xs={12} md={4}>
                 <Tile height={75} title={"Mensualité"} explanation={<RentabiliteBruteExplanationModal />} >
-                  <ClassicNumber value={Math.round(mensuality)} suffix={"€"} size={30} />
+                  <ClassicNumber value={formatNumberWithThousands(Math.round(mensuality))} suffix={"€"} size={30} />
                 </Tile>
               </Col>
               <Col xs={12} md={4}>
                 <Tile height={75} title={"Total Remboursé"} >
-                  <ClassicNumber value={Math.round(totalPaidBack)} suffix={"€"} size={30} />
+                  <ClassicNumber value={formatNumberWithThousands(Math.round(totalPaidBack))} suffix={"€"} size={30} />
                 </Tile>
               </Col>
               <Col xs={12} md={4}>
                 <Tile height={75} title={"Total intérêt"} >
-                  <ClassicNumber value={Math.round(totalLoanInterests)} suffix={"€"} size={30} />
+                  <ClassicNumber value={formatNumberWithThousands(Math.round(totalLoanInterests))} suffix={"€"} size={30} />
                 </Tile>
               </Col>
             </Row>
+          </Col>
+
+          {/* EMPRUNT: OUTPUT SMALL SCREEN */}
+          <Col xs={12} md={6} className={"d-xs-block d-sm-block d-md-none"}>
+            <Tile height={90} title={""} >
+              {state.loanAmount === 0 ?
+                (<p>
+                  <span>&rarr; Pas besoin d'emprunt pour financer votre achat? Veinard! </span>
+                  <span>😛</span>
+                  <br />
+                  <span>Sinon, renseignez les champs ci-dessus.</span>
+                </p>) :
+                (<p>
+                  <span>&rarr; Pour rembourser votre prêt de </span>
+                  <span><code>{state.loanAmount}</code></span>
+                  <span> vous paierez des mensualités de </span>
+                  <span><code>{formatNumberWithThousands(Math.round(mensuality))}</code></span>
+                  <span> euros. Au final c'est </span>
+                  <span><code>{formatNumberWithThousands(Math.round(totalPaidBack))}</code></span>
+                  <span> euros que vous rembourserez à la banque.</span>
+                </p>)
+              }
+            </Tile>
           </Col>
         </Row>
 

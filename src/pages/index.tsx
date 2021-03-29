@@ -9,7 +9,7 @@ import Tile from "../components/Tile";
 import { SliderWithTitle } from "../components/SliderWithTitle";
 import { SelectWithTitle } from "../components/SelectWithTitle";
 import { ColoredNumber } from "../components/ColoredNumber";
-import { ClassicNumber } from "../components/ClassicNumber";
+import { ClassicNumber, EvolutionNumber } from "../components/ClassicNumber";
 import Layout from "../components/Layout";
 import Spacing from "../components/Spacing";
 import { RentabiliteBruteExplanationModal, RentabiliteNetNetExplanationModal, NewVsOldHouseExplanationModal } from "../components/ExplanationModals"
@@ -98,6 +98,7 @@ const IndexPage = () => {
 
   // Taxes
   const initialAnnualTax = computeAnnualTaxes(state.netAnnualRevenu, state.numberOfFiscalPeople)
+  const initialTMI = initialAnnualTax / state.netAnnualRevenu * 100
   const loyerImposable = state.fiscality === "nonMeubleMicro" ?
     annualRent * 0.7 :
     state.fiscality === "meuble" ?
@@ -105,6 +106,7 @@ const IndexPage = () => {
       annualRent
   const withLocationAnnualTax = computeAnnualTaxes((state.netAnnualRevenu + loyerImposable), state.numberOfFiscalPeople)
   const taxSurplus = withLocationAnnualTax - initialAnnualTax
+  const withLocationTMI = withLocationAnnualTax / (state.netAnnualRevenu + loyerImposable) * 100
 
   // Rentability
   const rentabiliteBrute = annualRent / (state.price + state.initialHouseBuildingWork + notarialFee) * 100
@@ -126,12 +128,11 @@ const IndexPage = () => {
         <br />
         <br />
         <br />
-        <br />
 
         <Row>
           {/* BIEN: INPUT */}
           <Col xs={12} md={6}>
-            <Tile height={280} title={"Bien"}>
+            <Tile height={290} title={"Bien"}>
               <SliderWithTitle
                 title={"Prix"}
                 unit={"€"}
@@ -215,7 +216,6 @@ const IndexPage = () => {
                 </Tile>
               </Col>
             </Row>
-            <br />
             <Row>
               <Col xs={12} md={6}>
                 <Tile height={121} title={"Prix total"} >
@@ -230,6 +230,147 @@ const IndexPage = () => {
               </Col>
             </Row>
 
+          </Col>
+        </Row>
+
+
+        <br />
+        <br />
+        <br />
+
+
+        <Row>
+          {/* EMPRUNT: INPUT*/}
+          <Col xs={12} md={6}>
+            <Tile height={190} title={"Emprunt"}>
+              <SliderWithTitle
+                title={"Quantité empruntée"}
+                unit={"€"}
+                min={0}
+                max={state.price}
+                onChange={e => updateState('loanAmount', formatNumberWithoutThousands(e.target.value))}
+                value={state.loanAmount}
+              />
+              <SliderWithTitle
+                title={"Durée du prêt"}
+                unit={"Années"}
+                min={0}
+                max={25}
+                onChange={e => updateState('loanLength', formatNumberWithoutThousands(e.target.value))}
+                value={state.loanLength}
+              />
+              <SliderWithTitle
+                title={"Taux d'emprunt"}
+                unit={"%"}
+                min={0.2}
+                max={8}
+                onChange={e => updateState('loanRate', formatNumberWithoutThousands(e.target.value))}
+                value={state.loanRate}
+              />
+            </Tile>
+          </Col>
+          {/* EMPRUNT: OUTPUT*/}
+          <Col xs={12} md={6}>
+            <Tile height={75} title={"Intéret annuel"} explanation={<RentabiliteBruteExplanationModal />} >
+              <ClassicNumber value={Math.round(loanInterestPerYear)} suffix={"€"} size={50} />
+            </Tile>
+            <Row>
+              <Col xs={12} md={4}>
+                <Tile height={75} title={"Mensualité"} explanation={<RentabiliteBruteExplanationModal />} >
+                  <ClassicNumber value={Math.round(mensuality)} suffix={"€"} size={30} />
+                </Tile>
+              </Col>
+              <Col xs={12} md={4}>
+                <Tile height={75} title={"Total Remboursé"} >
+                  <ClassicNumber value={Math.round(totalPaidBack)} suffix={"€"} size={30} />
+                </Tile>
+              </Col>
+              <Col xs={12} md={4}>
+                <Tile height={75} title={"Total intérêt"} >
+                  <ClassicNumber value={Math.round(totalLoanInterests)} suffix={"€"} size={30} />
+                </Tile>
+              </Col>
+            </Row>
+          </Col>
+        </Row>
+
+
+        <br />
+        <br />
+
+        <Row>
+          {/* IMPOTS: INPUT*/}
+          <Col xs={12} md={6}>
+            <Tile height={300} title={"Impôts"}>
+              <SliderWithTitle
+                title={"Revenu net imposable"}
+                unit={"€/an"}
+                min={10000}
+                max={300000}
+                onChange={e => updateState('netAnnualRevenu', formatNumberWithoutThousands(e.target.value))}
+                value={state.netAnnualRevenu}
+              />
+
+              <SelectWithTitle
+                options={numberOfFiscalPeopleOptions}
+                title={"Parts fiscales"}
+                value={state.numberOfFiscalPeople}
+                onChange={choice => updateState('numberOfFiscalPeople', choice.value)}
+                explanation={<RentabiliteBruteExplanationModal />}
+              />
+              <Form.Check
+                custom
+                type={'checkbox'}
+                label={`Autre revenu immo?`}
+                checked={false}
+                onChange={e => { console.log("todo") }}
+              />
+            </Tile>
+          </Col>
+
+          {/* IMPOTS: OUTPUT*/}
+          <Col xs={12} md={6}>
+            <Tile height={75} title={"Impot Initial"} explanation={<RentabiliteBruteExplanationModal />} >
+              <EvolutionNumber
+                valueBefore={formatNumberWithThousands(Math.round(initialAnnualTax))}
+                valueAfter={formatNumberWithThousands(Math.round(withLocationAnnualTax))}
+                suffix={"€"}
+                size={30} />
+            </Tile>
+            <Tile height={75} title={"Taux moyen d'imposion (TMI)"} explanation={<RentabiliteBruteExplanationModal />} >
+              <EvolutionNumber
+                valueBefore={Math.round(initialTMI * 100) / 100}
+                valueAfter={Math.round(withLocationTMI * 100) / 100}
+                suffix={"%"}
+                size={30} />
+            </Tile>
+            <Tile height={75} title={"Surplus d'împot"} >
+              <ClassicNumber value={Math.round(withLocationAnnualTax - initialAnnualTax)} suffix={"€"} size={50} />
+            </Tile>
+          </Col>
+        </Row>
+
+        <br />
+        <br />
+        <br />
+
+
+        {/* FISCALITE: OUTPUT*/}
+        <Row>
+          <Col xs={12} md={6}>
+            <Tile height={110} title={"Fiscalité"}>
+              <SelectWithTitle
+                options={fiscalOptions}
+                title={"Fiscalité"}
+                value={state.fiscality}
+                onChange={value => updateState('fiscality', value)}
+                explanation={<RentabiliteBruteExplanationModal />}
+              />
+            </Tile>
+          </Col>
+          <Col xs={12} md={6}>
+            <Tile height={110} title={"Fiscalité"}>
+            </Tile>
           </Col>
         </Row>
 
@@ -293,7 +434,6 @@ const IndexPage = () => {
             <Tile height={140} title={"Rentabilite nette nette"} explanation={<RentabiliteNetNetExplanationModal />} >
               <ColoredNumber value={Math.round(rentabiliteNetNet * 100) / 100} suffix={"%"} />
             </Tile>
-            <br />
             <Row>
               <Col xs={12} md={6}>
                 <Tile height={75} title={"Brute"} explanation={<RentabiliteBruteExplanationModal />} >
@@ -309,140 +449,6 @@ const IndexPage = () => {
           </Col>
 
         </Row>
-
-        <br />
-        <br />
-        <br />
-
-        <Row>
-          {/* IMPOTS: INPUT*/}
-          <Col xs={12} md={6}>
-            <Tile height={300} title={"Impôts"}>
-              <SliderWithTitle
-                title={"Revenu net imposable"}
-                unit={"€/an"}
-                min={10000}
-                max={300000}
-                onChange={e => updateState('netAnnualRevenu', formatNumberWithoutThousands(e.target.value))}
-                value={state.netAnnualRevenu}
-              />
-
-              <SelectWithTitle
-                options={numberOfFiscalPeopleOptions}
-                title={"Parts fiscales"}
-                value={state.numberOfFiscalPeople}
-                onChange={choice => updateState('numberOfFiscalPeople', choice.value)}
-                explanation={<RentabiliteBruteExplanationModal />}
-              />
-              <Form.Check
-                custom
-                type={'checkbox'}
-                label={`Autre revenu immo?`}
-                checked={false}
-                onChange={e => { console.log("todo") }}
-              />
-            </Tile>
-          </Col>
-
-          {/* IMPOTS: OUTPUT*/}
-          <Col xs={12} md={6}>
-            <Tile height={75} title={"Impot Initial"} explanation={<RentabiliteBruteExplanationModal />} >
-              <ClassicNumber value={Math.round(initialAnnualTax)} suffix={"€"} size={30} />
-            </Tile>
-            <br />
-            <Tile height={75} title={"Avec location"} >
-              <ClassicNumber value={Math.round(withLocationAnnualTax)} suffix={"€"} size={30} />
-            </Tile>
-            <Tile height={150} title={"Différence"} >
-              <ClassicNumber value={Math.round(withLocationAnnualTax - initialAnnualTax)} suffix={"€"} size={50} />
-            </Tile>
-          </Col>
-        </Row>
-
-        <br />
-        <br />
-        <br />
-
-
-        <Row>
-          {/* EMPRUNT: INPUT*/}
-          <Col xs={12} md={6}>
-            <Tile height={300} title={"Emprunt"}>
-              <SliderWithTitle
-                title={"Quantité empruntée"}
-                unit={"€"}
-                min={0}
-                max={state.price}
-                onChange={e => updateState('loanAmount', formatNumberWithoutThousands(e.target.value))}
-                value={state.loanAmount}
-              />
-              <SliderWithTitle
-                title={"Durée du prêt"}
-                unit={"Années"}
-                min={0}
-                max={25}
-                onChange={e => updateState('loanLength', formatNumberWithoutThousands(e.target.value))}
-                value={state.loanLength}
-              />
-              <SliderWithTitle
-                title={"Taux d'emprunt"}
-                unit={"%"}
-                min={0.2}
-                max={8}
-                onChange={e => updateState('loanRate', formatNumberWithoutThousands(e.target.value))}
-                value={state.loanRate}
-              />
-            </Tile>
-          </Col>
-          {/* EMPRUNT: OUTPUT*/}
-          <Col xs={12} md={6}>
-            <Tile height={200} title={"Intéret annuel"} explanation={<RentabiliteBruteExplanationModal />} >
-              <ClassicNumber value={Math.round(loanInterestPerYear)} suffix={"€"} size={50} />
-            </Tile>
-            <br />
-            <Row>
-              <Col xs={12} md={4}>
-                <Tile height={75} title={"Mensualité"} explanation={<RentabiliteBruteExplanationModal />} >
-                  <ClassicNumber value={Math.round(mensuality)} suffix={"€"} size={30} />
-                </Tile>
-              </Col>
-              <Col xs={12} md={4}>
-                <Tile height={75} title={"Total Remboursé"} >
-                  <ClassicNumber value={Math.round(totalPaidBack)} suffix={"€"} size={30} />
-                </Tile>
-              </Col>
-              <Col xs={12} md={4}>
-                <Tile height={75} title={"Total intérêt"} >
-                  <ClassicNumber value={Math.round(totalLoanInterests)} suffix={"€"} size={30} />
-                </Tile>
-              </Col>
-            </Row>
-          </Col>
-        </Row>
-
-        <br />
-        <br />
-        <br />
-
-
-        <Row>
-          <Col xs={12} md={6}>
-            <Tile height={300} title={"Fiscalité"}>
-              <SelectWithTitle
-                options={fiscalOptions}
-                title={"Fiscalité"}
-                value={state.fiscality}
-                onChange={value => updateState('fiscality', value)}
-                explanation={<RentabiliteBruteExplanationModal />}
-              />
-            </Tile>
-          </Col>
-          <Col xs={12} md={6}>
-            <Tile height={300} title={"Fiscalité"}>
-            </Tile>
-          </Col>
-        </Row>
-
 
 
 

@@ -20,6 +20,18 @@ module.exports = {
             },
         },
         `gatsby-plugin-react-helmet`,
-        `gatsby-plugin-less`
+        `gatsby-plugin-less`,
+        {
+            resolve: `gatsby-plugin-manifest`,
+            options: {
+                name: `Immo Renta`,
+                short_name: `Immo Renta`,
+                start_url: `/`,
+                background_color: `#f7f0eb`,
+                theme_color: `#69b3a2`,
+                display: `standalone`,
+                icon: `static/logo/Home_single_big.png`
+            },
+        }
     ]
 }

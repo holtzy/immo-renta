@@ -1,10 +1,15 @@
+.tile-container {
+    margin-top: 15px;
+}
+
 .tile-content {
     background-color: var(--background-light);
     transition: all var(--mode-transform-duration) ease;
     border-radius: 7px;
     width: 100%;
-    overflow: scroll;
-    padding: 5px;
+    overflow: hidden;
+    padding: 14px 5px;
+
 }
 
 .title-title-container {

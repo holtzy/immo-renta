@@ -1,0 +1,14 @@
+.form-control:not(active){
+    color:var(--text-vibrant);
+    background-color: var(--background-light);
+    border-bottom: solid var(--medium-grey) 1px;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    border-radius: 3px;
+    transition: all var(--mode-transform-duration) ease;
+ }
+
+ .form-control:focus{
+    color:var(--text-normal);
+ }

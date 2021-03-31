@@ -1,5 +1,6 @@
 import "../styles/slider.less";
 import "../styles/checkbox.less";
+import "../styles/textForm.css";
 import "./sliderWithTitle.css";
 
 import React from "react";

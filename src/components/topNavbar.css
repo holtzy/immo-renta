@@ -19,6 +19,13 @@
     font-size: 15px !important;
 }
 
+.navbar-collapse {
+    background-color: var(--background-dark) !important;
+    transition: all var(--mode-transform-duration) ease;
+    text-align: right !important;
+}
+
+
 /* Main link in the navbar */
 .nav-link {
     text-transform: uppercase!important;

@@ -18,7 +18,15 @@ import {
   NewVsOldHouseExplanationModal
 } from "../components/ExplanationModals"
 
-import { computeTaxFonciere, computeAnnualTaxes, computeMensuality, computeTotalLoanInterest, computeNetNetRentability } from '../utils/mathFormulas'
+import {
+  computeTaxFonciere,
+  computeAnnualTaxes,
+  computeMensuality,
+  computeTotalLoanInterest,
+  computeRentaBrut,
+  computeRentaNet,
+  computeRentaNetNet
+} from '../utils/mathFormulas'
 import { formatNumberWithThousands, formatNumberWithoutThousands } from '../utils/utils'
 
 
@@ -46,7 +54,7 @@ const initialState: InitialState = {
   surface: 40,
   price: 98000,
   rent: 400,
-  fiscality: "nonMeubleMicro",
+  fiscality: "meuble",
   monthsWithNoRent: 1,
   agencyMensualFee: 0,
   ownerMensualFees: 100,
@@ -104,19 +112,15 @@ const IndexPage = () => {
   // Taxes
   const initialAnnualTax = computeAnnualTaxes(state.netAnnualRevenu, state.numberOfFiscalPeople)
   const initialTMI = initialAnnualTax / state.netAnnualRevenu * 100
-  const loyerImposable = state.fiscality === "nonMeubleMicro" ?
-    annualRent * 0.7 :
-    state.fiscality === "meuble" ?
-      annualRent * 0.5 :
-      annualRent
+  const loyerImposable =
+    state.fiscality === "nonMeubleMicro" ?
+      annualRent * 0.7 :
+      state.fiscality === "meuble" ?
+        annualRent * 0.5 :
+        annualRent
   const withLocationAnnualTax = computeAnnualTaxes((state.netAnnualRevenu + loyerImposable), state.numberOfFiscalPeople)
   const taxSurplus = withLocationAnnualTax - initialAnnualTax
   const withLocationTMI = withLocationAnnualTax / (state.netAnnualRevenu + loyerImposable) * 100
-
-  // Rentability
-  const rentabiliteBrute = annualRent / (state.price + state.initialHouseBuildingWork + notarialFee) * 100
-  const rentabiliteNet = (annualRent - 12 * state.agencyMensualFee - 12 * state.ownerMensualFees - state.taxeFonciere) / state.price * 100
-  const rentabiliteNetNet = computeNetNetRentability(state.fiscality, annualRent, taxSurplus)
 
   // Loan
   const mensuality = computeMensuality(state.loanAmount, state.loanLength, state.loanRate)
@@ -124,9 +128,17 @@ const IndexPage = () => {
   const totalLoanInterests = computeTotalLoanInterest(mensuality, state.loanLength, state.loanAmount)
   const loanInterestPerYear = totalLoanInterests / state.loanLength
 
+  // Rentability
+  const rentabiliteBrute = computeRentaBrut(annualRent, state.price, state.initialHouseBuildingWork, notarialFee)
+  const rentabiliteNet = computeRentaNet(annualRent, state.price, state.initialHouseBuildingWork, notarialFee, state.agencyMensualFee, state.ownerMensualFees, state.taxeFonciere)
+  const rentabiliteNetNet = computeRentaNetNet(annualRent, state.price, state.initialHouseBuildingWork, notarialFee, state.agencyMensualFee, state.ownerMensualFees, state.taxeFonciere, taxSurplus, loanInterestPerYear)
+
+
+
+
+
+
   return (
-
-
 
     <Layout title="Renta-Immo" seoDescription="Calculez la rentabilité de votre investissement immobilier en 1 click.">
 
@@ -269,14 +281,22 @@ const IndexPage = () => {
                 title={"Quantité empruntée"}
                 unit={"€"}
                 min={0}
-                max={state.price}
-                onChange={e => updateState('loanAmount', formatNumberWithThousands(e.target.value))}
+                max={totalPrice}
+                onChange={e => updateState('loanAmount', formatNumberWithoutThousands(e.target.value))}
                 value={state.loanAmount}
+              />
+              <SliderWithTitle
+                title={"Apport"}
+                unit={"€"}
+                min={0}
+                max={totalPrice}
+                onChange={e => updateState('loanAmount', totalPrice - formatNumberWithoutThousands(e.target.value))}
+                value={totalPrice - state.loanAmount}
               />
               <SliderWithTitle
                 title={"Durée du prêt"}
                 unit={"Années"}
-                min={0}
+                min={1}
                 max={25}
                 onChange={e => updateState('loanLength', formatNumberWithThousands(e.target.value))}
                 value={state.loanLength}

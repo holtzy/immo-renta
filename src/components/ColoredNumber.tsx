@@ -15,7 +15,9 @@ export const ColoredNumber = ({
     return (
         <div className={"colored-number-container"}>
             <div>
-                <span style={{ fontSize: '5rem', fontWeight: 'bold' }}>{value}</span>
+                <span style={{ fontSize: '5rem', fontWeight: 'bold' }}>
+                    {value}
+                </span>
                 <span>{suffix}</span>
             </div>
         </div>

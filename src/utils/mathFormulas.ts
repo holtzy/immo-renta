@@ -44,15 +44,45 @@ export const computeTotalLoanInterest = (mensuality: number, loanLength: number,
     return (mensuality * loanLength * 12) - amount
 }
 
-export const computeNetNetRentability = (fiscalityType: string, annualRent: number, taxSurplus: number) => {
 
-    // Forbidden if annualRent > 15000
-    if (fiscalityType === "nonMeubleMicro") {
-        return (annualRent * 0.7)
-
-    }
-}
 
 export const computeTaxFonciere = (rent: number) => {
     return rent
 }
+
+export const computeRentaBrut = (
+    annualRent: number,
+    price: number,
+    initialHouseBuildingWork: number,
+    notarialFee: number
+) => {
+    return annualRent / (price + initialHouseBuildingWork + notarialFee) * 100
+}
+
+export const computeRentaNet = (
+    annualRent: number,
+    price: number,
+    initialHouseBuildingWork: number,
+    notarialFee: number,
+    agencyMensualFee: number,
+    ownerMensualFees: number,
+    taxeFonciere: number
+) => {
+    return (annualRent - 12 * agencyMensualFee - 12 * ownerMensualFees - taxeFonciere) / (price + initialHouseBuildingWork + notarialFee) * 100
+}
+
+
+export const computeRentaNetNet = (
+    annualRent: number,
+    price: number,
+    initialHouseBuildingWork: number,
+    notarialFee: number,
+    agencyMensualFee: number,
+    ownerMensualFees: number,
+    taxeFonciere: number,
+    taxSurplus: number,
+    loanInterestPerYear: number
+) => {
+    return (annualRent - 12 * agencyMensualFee - 12 * ownerMensualFees - taxeFonciere - taxSurplus - loanInterestPerYear) / (price + initialHouseBuildingWork + notarialFee) * 100
+}
+

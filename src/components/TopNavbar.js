@@ -8,6 +8,7 @@ import NavDropdown from "react-bootstrap/NavDropdown";
 import { Container } from "react-bootstrap";
 
 import icon from "../images/icon.png"
+import { ImmoRentaLogo } from "../components/ImmoRentaLogo"
 
 export default function TopNavbar() {
   const [show, setShow] = React.useState(false);
@@ -20,7 +21,9 @@ export default function TopNavbar() {
     <Container>
       <Navbar className="container" expand="lg" fixed="top">
         <Navbar.Brand href="/">
-          <img src={icon} alt="Matplotlib logo" style={{ width: '22px', marginRight: "8px" }} />
+          <div style={{ width: 20, marginRight: 10 }}>
+            <ImmoRentaLogo />
+          </div>
           <div>Immo Renta</div>
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />

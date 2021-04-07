@@ -1,7 +1,8 @@
 .navbar {
     justify-content: space-between !important;
     align-items: center !important;
-    background-color: transparent !important;
+    background-color: var(--background-dark) !important;
+    transition: all var(--mode-transform-duration) ease;
     height: var(--navbar-height)
 }
 

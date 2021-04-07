@@ -12,10 +12,15 @@ import { ColoredNumber } from "../components/ColoredNumber";
 import { ClassicNumber, EvolutionNumber } from "../components/ClassicNumber";
 import Layout from "../components/Layout";
 import Spacing from "../components/Spacing";
-import { RentabiliteBruteExplanationModal, RentabiliteNetNetExplanationModal, NewVsOldHouseExplanationModal } from "../components/ExplanationModals"
+import {
+  RentabiliteBruteExplanationModal,
+  RentabiliteNetNetExplanationModal,
+  NewVsOldHouseExplanationModal
+} from "../components/ExplanationModals"
 
 import { computeTaxFonciere, computeAnnualTaxes, computeMensuality, computeTotalLoanInterest, computeNetNetRentability } from '../utils/mathFormulas'
 import { formatNumberWithThousands, formatNumberWithoutThousands } from '../utils/utils'
+
 
 type InitialState = {
   surface: number;
@@ -120,6 +125,8 @@ const IndexPage = () => {
   const loanInterestPerYear = totalLoanInterests / state.loanLength
 
   return (
+
+
 
     <Layout title="Renta-Immo" seoDescription="Calculez la rentabilité de votre investissement immobilier en 1 click.">
 

@@ -1,0 +1,10 @@
+.custom-select {
+    color:var(--text-vibrant) !important;
+    background-color: var(--background-light) !important;
+    border-bottom: solid var(--medium-grey) 1px !important;
+    border-left: none !important;
+    border-right: none !important;
+    border-top: none !important;
+    border-radius: 1px !important;
+    transition: all var(--mode-transform-duration) ease !important;
+}

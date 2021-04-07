@@ -8,6 +8,7 @@ import TopNavbar from "../components/TopNavbar";
 
 // Import Styles = bootstrap + custom
 import "../styles/style.css";
+import "../styles/selectButton.css";
 import "../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 
 // Layout component: add header + footer + TOC to content

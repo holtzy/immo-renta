@@ -2,7 +2,6 @@ import "./selectWithTitle.css";
 
 import React from "react";
 import Form from "react-bootstrap/Form";
-import Select from 'react-select'
 
 type option = {
     label: string;
@@ -13,11 +12,9 @@ type SelectWithTitleProps = {
     title: string;
     value: string | number;
     options: option[];
-    onChange: (choice: option) => void;
+    onChange: any;
     explanation?: React.Component;
 }
-
-
 
 export const SelectWithTitle = ({
     title,
@@ -29,15 +26,25 @@ export const SelectWithTitle = ({
 
     return (
         <Form.Group>
-            <div >
-                <p className={"select-with-title-title"}>{title}{explanation}
-                </p>
-                <div style={{ width: '100%', marginRight: 4 }}>
-                    <Select
-                        options={options}
-                        onChange={onChange}
-                        value={options.filter(option => option.value === value)[0]}
-                    />
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'left' }}>
+                    <span style={{ marginRight: 14 }}>{title}</span>
+                    <div style={{ maxWidth: 300, marginRight: 4 }}>
+                        <Form.Control as="select" size="sm" custom
+                            onChange={onChange}
+                        >
+                            {
+                                options.map(option => {
+                                    return (
+                                        <option value={option.value}>{option.label}</option>
+                                    )
+                                })
+                            }
+                        </Form.Control>
+                    </div>
+                    <span>
+                        {explanation}
+                    </span>
                 </div>
             </div>
         </Form.Group >

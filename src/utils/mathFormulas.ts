@@ -83,6 +83,7 @@ export const computeRentaNetNet = (
     taxSurplus: number,
     loanInterestPerYear: number
 ) => {
-    return (annualRent - 12 * agencyMensualFee - 12 * ownerMensualFees - taxeFonciere - taxSurplus - loanInterestPerYear) / (price + initialHouseBuildingWork + notarialFee) * 100
+    return (annualRent - 12 * agencyMensualFee - 12 * ownerMensualFees - taxeFonciere - taxSurplus - loanInterestPerYear) /
+        (price + initialHouseBuildingWork + notarialFee) * 100
 }
 

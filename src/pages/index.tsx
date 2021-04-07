@@ -109,6 +109,7 @@ const IndexPage = () => {
   const notarialFee = state.isHouseBrandNew ? state.price * 4 / 100 : state.price * 8 / 100
   const totalPrice = state.price + notarialFee + state.initialHouseBuildingWork
 
+  console.log("numberOfFiscalPeople", state.numberOfFiscalPeople)
   // Taxes
   const initialAnnualTax = computeAnnualTaxes(state.netAnnualRevenu, state.numberOfFiscalPeople)
   const initialTMI = initialAnnualTax / state.netAnnualRevenu * 100
@@ -381,7 +382,7 @@ const IndexPage = () => {
                 options={numberOfFiscalPeopleOptions}
                 title={"Parts fiscales"}
                 value={state.numberOfFiscalPeople}
-                onChange={choice => updateState('numberOfFiscalPeople', choice.value)}
+                onChange={e => updateState('numberOfFiscalPeople', e.target.value)}
                 explanation={<RentabiliteBruteExplanationModal />}
               />
               <Form.Check
@@ -421,17 +422,17 @@ const IndexPage = () => {
         <br />
 
 
-        {/* FISCALITE: OUTPUT*/}
+        {/* FISCALITE: INPUT*/}
         <Row>
           <Col xs={12} md={6}>
             <Tile height={110} title={"Fiscalité"}>
-              <SelectWithTitle
-                options={fiscalOptions}
-                title={"Fiscalité"}
-                value={state.fiscality}
-                onChange={value => updateState('fiscality', value)}
-                explanation={<RentabiliteBruteExplanationModal />}
-              />
+              <Form.Group>
+                <SelectWithTitle
+                  title={"Fiscalité"}
+                  onChange={e => updateState('fiscality', e.target.value)}
+                  options={fiscalOptions}
+                />
+              </Form.Group >
             </Tile>
           </Col>
           <Col xs={12} md={6}>

@@ -240,8 +240,8 @@ const IndexPage = () => {
   )
 
   const houseOutputSmallTile = (
-    <Tile title={""} >
-      <p>
+    <Tile title={""} hasBorder>
+      <div className={"result-explanation-text"}>
         <span>&rarr; Le prix total de votre bien s'élève à </span>
         <span><code>{formatNumberWithThousands(Math.round(totalPrice))}</code></span>
         <span> euros. Il inclut </span>
@@ -249,8 +249,7 @@ const IndexPage = () => {
         <span> euros de frais de notaire. Cela représente </span>
         <span><code>{formatNumberWithThousands(Math.round(pricePerSquareMeter))}</code></span>
         <span> euros par m2.</span>
-              }
-              </p>
+      </div>
     </Tile>
   )
 
@@ -318,15 +317,14 @@ const IndexPage = () => {
   )
 
   const loanOutputSmallTile = (
-    <Tile title={""} >
+    <Tile title={""} hasBorder>
       {state.loanAmount === 0 ?
-        (<p>
+        (<div className={"result-explanation-text"}>
           <span>&rarr; Pas besoin d'emprunt pour financer votre achat? Veinard! </span>
           <span>😛</span>
-          <br />
-          <span>Sinon, renseignez les champs ci-dessus.</span>
-        </p>) :
-        (<p>
+          <span>. Sinon, renseignez les champs ci-dessus.</span>
+        </div>) :
+        (<div className={"result-explanation-text"}>
           <span>&rarr; Pour rembourser votre prêt de </span>
           <span><code>{state.loanAmount}</code></span>
           <span> vous paierez des mensualités de </span>
@@ -334,7 +332,7 @@ const IndexPage = () => {
           <span> euros. Au final c'est </span>
           <span><code>{formatNumberWithThousands(Math.round(totalPaidBack))}</code></span>
           <span> euros que vous rembourserez à la banque.</span>
-        </p>)
+        </div>)
       }
     </Tile>
   )
@@ -388,24 +386,43 @@ const IndexPage = () => {
     </div>
   )
 
+  const taxOutputSmallTile = (
+    <Tile title={""} hasBorder>
+      <div className={"result-explanation-text"}>
+        <span>&rarr; Votre taux d'imposition moyen est de </span>
+        <span><code>{state.loanAmount}</code></span>
+        <span> Et voila ce qu'il se passe </span>
+        <span><code>{formatNumberWithThousands(Math.round(mensuality))}</code></span>
+        <span> euros. Au final c'est </span>
+        <span><code>{formatNumberWithThousands(Math.round(totalPaidBack))}</code></span>
+        <span> euros que vous rembourserez à la banque.</span>
+      </div>
+    </Tile>
+  )
+
   const fiscalityInputTile = (
     <div>
-      <Col xs={12} md={6}>
-        <Tile title={"Fiscalité"}>
-          <Form.Group>
-            <SelectWithTitle
-              title={"Fiscalité"}
-              onChange={e => updateState('fiscality', e.target.value)}
-              options={fiscalOptions}
-            />
-          </Form.Group >
-        </Tile>
-      </Col>
-      <Col xs={12} md={6}>
-        <Tile title={"Fiscalité"}>
-        </Tile>
-      </Col>
+      <Tile title={"Fiscalité"}>
+        <Form.Group>
+          <SelectWithTitle
+            title={"Fiscalité"}
+            onChange={e => updateState('fiscality', e.target.value)}
+            options={fiscalOptions}
+          />
+        </Form.Group >
+      </Tile>
     </div>
+  )
+
+  const fiscalityOutputSmallTile = (
+    <Tile title={""} hasBorder>
+      <div className={"result-explanation-text"}>
+        <span>&rarr; About fiscality mate </span>
+        <span><code>{state.loanAmount}</code></span>
+        <span> Et voila ce qu'il se passe </span>
+        <span><code>{formatNumberWithThousands(Math.round(mensuality))}</code></span>
+      </div>
+    </Tile>
   )
 
   const locationInputTile = (
@@ -442,7 +459,6 @@ const IndexPage = () => {
         onChange={e => updateState('ownerMensualFees', formatNumberWithoutThousands(e.target.value))}
         value={state.ownerMensualFees}
       />
-
       <SliderWithTitle
         title={"Charge récup."}
         unit={"€ / mois"}
@@ -476,93 +492,36 @@ const IndexPage = () => {
 
   return (
 
-    <Layout title="Renta-Immo" seoDescription="Calculez la rentabilité de votre investissement immobilier en 1 click.">
+    <Layout title="Immo Renta" seoDescription="Calculez la rentabilité de votre investissement immobilier en 1 click.">
 
       <Container>
 
-        <br />
-        <br />
-        <br />
-
+        <br /><br /><br />
         <Row>
-          {/* BIEN: INPUT */}
           <Col xs={12} md={6}>
             {houseInputTile}
-          </Col>
-
-          {/* BIEN: OUTPUT LARGE SCREEN */}
-          <Col xs={12} md={6} className={"d-none d-xs-none d-sm-none d-md-block"}>
-            {houseOutputBigTile}
-          </Col>
-
-          {/* BIEN: OUTPUT SMALL SCREEN */}
-          <Col xs={12} md={6} className={"d-xs-block d-sm-block d-md-none"}>
             {houseOutputSmallTile}
-          </Col>
-        </Row>
-
-
-        <br />
-        <br />
-        <br />
-
-
-        <Row>
-          {/* EMPRUNT: INPUT*/}
-          <Col xs={12} md={6}>
+            <br /><hr /><br />
             {loanInputTile}
-          </Col>
-
-          {/* EMPRUNT: OUTPUT BIG SCREEN*/}
-          <Col xs={12} md={6} className={"d-none d-xs-none d-sm-none d-md-block"}>
-            {loanOutputBigTile}
-          </Col>
-
-          {/* EMPRUNT: OUTPUT SMALL SCREEN */}
-          <Col xs={12} md={6} className={"d-xs-block d-sm-block d-md-none"}>
             {loanOutputSmallTile}
+            <br /><hr /><br />
+            {fiscalityInputTile}
+            {fiscalityOutputSmallTile}
           </Col>
-        </Row>
 
-
-        <br />
-        <br />
-
-        <Row>
-          {/* IMPOTS: INPUT*/}
           <Col xs={12} md={6}>
             {taxInputTile}
-          </Col>
-
-          {/* IMPOTS: OUTPUT*/}
-          <Col xs={12} md={6}>
-            {taxOutputBigTile}
-          </Col>
-        </Row>
-
-        <br />
-        <br />
-        <br />
-
-
-        {/* FISCALITE: INPUT*/}
-        <Row>
-          {fiscalityInputTile}
-        </Row>
-
-
-        <br />
-        <br />
-        <br />
-
-        <Row>
-
-          {/* LOCATION: INPUT */}
-          <Col xs={12} md={6}>
+            {taxOutputSmallTile}
+            <br /><hr /><br />
             {locationInputTile}
           </Col>
+        </Row>
 
-          {/* LOCATION: OUTPUT */}
+        <br /><br />
+        <hr />
+
+
+        <Row>
           <Col xs={12} md={6}>
             {locationOutputBigTile}
           </Col>

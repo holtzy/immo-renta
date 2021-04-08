@@ -7,16 +7,17 @@ type TileProps = {
     title: string;
     children: React.ReactNode;
     explanation?: React.Component;
+    hasBorder?: boolean;
 }
 
-export default function Tile({ children, title, explanation }: TileProps) {
+export default function Tile({ children, title, explanation, hasBorder }: TileProps) {
     return (
         <div className={"tile-container"}>
             <div className={"title-title-container"}>
                 <span className={'tile-title'}>{title}</span>
                 {explanation}
             </div>
-            <div className={"tile-content"}>
+            <div className={hasBorder ? "tile-content tile-content-border" : "tile-content"}>
                 {children}
             </div>
         </div>

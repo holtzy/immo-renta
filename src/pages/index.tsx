@@ -15,7 +15,9 @@ import Spacing from "../components/Spacing";
 import {
   RentabiliteBruteExplanationModal,
   RentabiliteNetNetExplanationModal,
-  NewVsOldHouseExplanationModal
+  NewVsOldHouseExplanationModal,
+  InterestRateExplanationModal,
+  PartFiscalExplanationModal
 } from "../components/ExplanationModals"
 
 import {
@@ -135,9 +137,342 @@ const IndexPage = () => {
   const rentabiliteNetNet = computeRentaNetNet(annualRent, state.price, state.initialHouseBuildingWork, notarialFee, state.agencyMensualFee, state.ownerMensualFees, state.taxeFonciere, taxSurplus, loanInterestPerYear)
 
 
+  // Tiles
+  const houseInputTile = (
+    <Tile title={"Bien"}>
+      <SliderWithTitle
+        title={"Prix"}
+        unit={"€"}
+        min={30000}
+        max={2000000}
+        onChange={e => updateState('price', formatNumberWithoutThousands(e.target.value))}
+        value={state.price}
+      />
+      <SliderWithTitle
+        title={"Travaux à l'achat"}
+        unit={"€"}
+        min={0}
+        max={200000}
+        onChange={e => updateState('initialHouseBuildingWork', formatNumberWithoutThousands(e.target.value))}
+        value={state.initialHouseBuildingWork}
+      />
+      <SliderWithTitle
+        title={"Travaux d'entretien estimés"}
+        unit={"€/an"}
+        min={0}
+        max={10000}
+        onChange={e => updateState('annualHouseBuildingWork', formatNumberWithoutThousands(e.target.value))}
+        value={state.annualHouseBuildingWork}
+      />
+      <SliderWithTitle
+        title={"Surface"}
+        unit={"m²"}
+        min={7}
+        max={300}
+        onChange={e => updateState('surface', formatNumberWithoutThousands(e.target.value))}
+        value={state.surface}
+      />
+      <SliderWithTitle
+        title={"Taxe foncière"}
+        unit={"€/an"}
+        min={0}
+        max={10000}
+        onChange={e => updateState('taxeFonciere', formatNumberWithoutThousands(e.target.value))}
+        value={Math.round(state.taxeFonciere)}
+        disabled={isTaxeFonciereAutoComputed}
+        hasAutoEstimate
+        onAutoEstimateChange={e => {
+          // If I switch to auto estimate, I have to estimate the tax!
+          if (!isTaxeFonciereAutoComputed) {
+            updateState('taxeFonciere', computeTaxFonciere(state.rent))
+          }
+          setIsTaxeFonciereAutoComputed(!isTaxeFonciereAutoComputed)
+        }}
+      />
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <Form.Check
+          custom
+          type={'checkbox'}
+          id={`custom-checkbox`}
+          label={`Le bien est neuf`}
+          checked={state.isHouseBrandNew}
+          onChange={e => updateState('isHouseBrandNew', !state.isHouseBrandNew)}
+        />
+        <NewVsOldHouseExplanationModal />
+      </div>
+    </Tile>
+  )
 
+  const houseOutputBigTile = (
+    <div>
+      <Row >
+        <Col xs={12} md={6}>
+          <Tile title={"Prix au m²"} >
+            <ClassicNumber
+              value={formatNumberWithThousands(Math.round(pricePerSquareMeter))}
+              suffix={"€/m²"}
+              size={40} />
+          </Tile>
+        </Col>
+        <Col xs={12} md={6}>
+          <Tile title={"Frais de notaire"} >
+            <ClassicNumber
+              value={formatNumberWithThousands(Math.round(notarialFee))}
+              suffix={"€"}
+              size={40} />
+          </Tile>
+        </Col>
+      </Row>
+      <Row>
+        <Col xs={12} md={6}>
+          <Tile title={"Prix total"} >
+            <ClassicNumber
+              value={formatNumberWithThousands(Math.round(totalPrice))}
+              suffix={"€"}
+              size={40} />
+          </Tile>
+        </Col>
+        <Col xs={12} md={6}>
 
+        </Col>
+      </Row>
+    </div>
+  )
 
+  const houseOutputSmallTile = (
+    <Tile title={""} >
+      <p>
+        <span>&rarr; Le prix total de votre bien s'élève à </span>
+        <span><code>{formatNumberWithThousands(Math.round(totalPrice))}</code></span>
+        <span> euros. Il inclut </span>
+        <span><code>{formatNumberWithThousands(Math.round(notarialFee))}</code></span>
+        <span> euros de frais de notaire. Cela représente </span>
+        <span><code>{formatNumberWithThousands(Math.round(pricePerSquareMeter))}</code></span>
+        <span> euros par m2.</span>
+              }
+              </p>
+    </Tile>
+  )
+
+  const loanInputTile = (
+    <Tile title={"Emprunt"}>
+      <SliderWithTitle
+        title={"Quantité empruntée"}
+        unit={"€"}
+        min={0}
+        max={totalPrice}
+        onChange={e => updateState('loanAmount', formatNumberWithoutThousands(e.target.value))}
+        value={state.loanAmount}
+      />
+      <SliderWithTitle
+        title={"Apport"}
+        unit={"€"}
+        min={0}
+        max={totalPrice}
+        onChange={e => updateState('loanAmount', totalPrice - formatNumberWithoutThousands(e.target.value))}
+        value={totalPrice - state.loanAmount}
+      />
+      <SliderWithTitle
+        title={"Durée du prêt"}
+        unit={"Années"}
+        min={1}
+        max={25}
+        onChange={e => updateState('loanLength', formatNumberWithThousands(e.target.value))}
+        value={state.loanLength}
+      />
+      <SliderWithTitle
+        title={"Taux d'emprunt"}
+        unit={"%"}
+        min={0.2}
+        max={8}
+        onChange={e => updateState('loanRate', formatNumberWithThousands(e.target.value))}
+        value={state.loanRate}
+        explanation={<InterestRateExplanationModal />}
+      />
+    </Tile>
+  )
+
+  const loanOutputBigTile = (
+    <div>
+      <Tile title={"Intéret annuel"} explanation={<RentabiliteBruteExplanationModal />} >
+        <ClassicNumber value={formatNumberWithThousands(Math.round(loanInterestPerYear))} suffix={"€"} size={50} />
+      </Tile>
+      <Row>
+        <Col xs={12} md={4}>
+          <Tile title={"Mensualité"} explanation={<RentabiliteBruteExplanationModal />} >
+            <ClassicNumber value={formatNumberWithThousands(Math.round(mensuality))} suffix={"€"} size={30} />
+          </Tile>
+        </Col>
+        <Col xs={12} md={4}>
+          <Tile title={"Total Remboursé"} >
+            <ClassicNumber value={formatNumberWithThousands(Math.round(totalPaidBack))} suffix={"€"} size={30} />
+          </Tile>
+        </Col>
+        <Col xs={12} md={4}>
+          <Tile title={"Total intérêt"} >
+            <ClassicNumber value={formatNumberWithThousands(Math.round(totalLoanInterests))} suffix={"€"} size={30} />
+          </Tile>
+        </Col>
+      </Row>
+    </div>
+  )
+
+  const loanOutputSmallTile = (
+    <Tile title={""} >
+      {state.loanAmount === 0 ?
+        (<p>
+          <span>&rarr; Pas besoin d'emprunt pour financer votre achat? Veinard! </span>
+          <span>😛</span>
+          <br />
+          <span>Sinon, renseignez les champs ci-dessus.</span>
+        </p>) :
+        (<p>
+          <span>&rarr; Pour rembourser votre prêt de </span>
+          <span><code>{state.loanAmount}</code></span>
+          <span> vous paierez des mensualités de </span>
+          <span><code>{formatNumberWithThousands(Math.round(mensuality))}</code></span>
+          <span> euros. Au final c'est </span>
+          <span><code>{formatNumberWithThousands(Math.round(totalPaidBack))}</code></span>
+          <span> euros que vous rembourserez à la banque.</span>
+        </p>)
+      }
+    </Tile>
+  )
+
+  const taxInputTile = (
+    <Tile title={"Impôts"}>
+      <SliderWithTitle
+        title={"Revenu net imposable"}
+        unit={"€/an"}
+        min={10000}
+        max={300000}
+        onChange={e => updateState('netAnnualRevenu', formatNumberWithoutThousands(e.target.value))}
+        value={state.netAnnualRevenu}
+      />
+      <SelectWithTitle
+        options={numberOfFiscalPeopleOptions}
+        title={"Parts fiscales"}
+        value={state.numberOfFiscalPeople}
+        onChange={e => updateState('numberOfFiscalPeople', e.target.value)}
+        explanation={<PartFiscalExplanationModal />}
+      />
+      <Form.Check
+        custom
+        type={'checkbox'}
+        label={`Autre revenu immo?`}
+        checked={false}
+        onChange={e => { console.log("todo") }}
+      />
+    </Tile>
+  )
+
+  const taxOutputBigTile = (
+    <div>
+      <Tile title={"Impot Initial"} explanation={<RentabiliteBruteExplanationModal />} >
+        <EvolutionNumber
+          valueBefore={formatNumberWithThousands(Math.round(initialAnnualTax))}
+          valueAfter={formatNumberWithThousands(Math.round(withLocationAnnualTax))}
+          suffix={"€"}
+          size={30} />
+      </Tile>
+      <Tile title={"Taux moyen d'imposion (TMI)"} explanation={<RentabiliteBruteExplanationModal />} >
+        <EvolutionNumber
+          valueBefore={Math.round(initialTMI * 100) / 100}
+          valueAfter={Math.round(withLocationTMI * 100) / 100}
+          suffix={"%"}
+          size={30} />
+      </Tile>
+      <Tile title={"Surplus d'împot"} >
+        <ClassicNumber value={Math.round(withLocationAnnualTax - initialAnnualTax)} suffix={"€"} size={50} />
+      </Tile>
+    </div>
+  )
+
+  const fiscalityInputTile = (
+    <div>
+      <Col xs={12} md={6}>
+        <Tile title={"Fiscalité"}>
+          <Form.Group>
+            <SelectWithTitle
+              title={"Fiscalité"}
+              onChange={e => updateState('fiscality', e.target.value)}
+              options={fiscalOptions}
+            />
+          </Form.Group >
+        </Tile>
+      </Col>
+      <Col xs={12} md={6}>
+        <Tile title={"Fiscalité"}>
+        </Tile>
+      </Col>
+    </div>
+  )
+
+  const locationInputTile = (
+    <Tile title={"Location"}>
+      <SliderWithTitle
+        title={"Loyer"}
+        unit={"€ / mois"}
+        min={100}
+        max={4000}
+        onChange={e => updateState('rent', formatNumberWithoutThousands(e.target.value))}
+        value={state.rent}
+      />
+      <SliderWithTitle
+        title={"Frais agence"}
+        unit={"€ / mois"}
+        min={0}
+        max={1000}
+        onChange={e => updateState('agencyMensualFee', formatNumberWithoutThousands(e.target.value))}
+        value={state.agencyMensualFee}
+      />
+      <SliderWithTitle
+        title={"Mois sans locataire"}
+        unit={"nombre"}
+        min={0}
+        max={12}
+        onChange={e => updateState('monthsWithNoRent', formatNumberWithoutThousands(e.target.value))}
+        value={state.monthsWithNoRent}
+      />
+      <SliderWithTitle
+        title={"Charge du proprio"}
+        unit={"€ / mois"}
+        min={0}
+        max={1000}
+        onChange={e => updateState('ownerMensualFees', formatNumberWithoutThousands(e.target.value))}
+        value={state.ownerMensualFees}
+      />
+
+      <SliderWithTitle
+        title={"Charge récup."}
+        unit={"€ / mois"}
+        min={0}
+        max={1000}
+        onChange={e => updateState('refundableMensualFees', formatNumberWithoutThousands(e.target.value))}
+        value={state.refundableMensualFees}
+      />
+    </Tile>
+  )
+
+  const locationOutputBigTile = (
+    <div>
+      <Tile title={"Rentabilite nette nette"} explanation={<RentabiliteNetNetExplanationModal />} >
+        <ColoredNumber value={Math.round(rentabiliteNetNet * 100) / 100} suffix={"%"} />
+      </Tile>
+      <Row>
+        <Col xs={12} md={6}>
+          <Tile title={"Brute"} explanation={<RentabiliteBruteExplanationModal />} >
+            <ClassicNumber value={Math.round(rentabiliteBrute * 100) / 100} suffix={"%"} size={30} />
+          </Tile>
+        </Col>
+        <Col xs={12} md={6}>
+          <Tile title={"Nette de charge"} >
+            <ClassicNumber value={Math.round(rentabiliteNet * 100) / 100} suffix={"%"} size={30} />
+          </Tile>
+        </Col>
+      </Row>
+    </div>
+  )
 
   return (
 
@@ -152,119 +487,17 @@ const IndexPage = () => {
         <Row>
           {/* BIEN: INPUT */}
           <Col xs={12} md={6}>
-            <Tile height={290} title={"Bien"}>
-              <SliderWithTitle
-                title={"Prix"}
-                unit={"€"}
-                min={30000}
-                max={2000000}
-                onChange={e => updateState('price', formatNumberWithoutThousands(e.target.value))}
-                value={state.price}
-              />
-              <SliderWithTitle
-                title={"Travaux à l'achat"}
-                unit={"€"}
-                min={0}
-                max={200000}
-                onChange={e => updateState('initialHouseBuildingWork', formatNumberWithoutThousands(e.target.value))}
-                value={state.initialHouseBuildingWork}
-              />
-              <SliderWithTitle
-                title={"Travaux d'entretien estimés"}
-                unit={"€/an"}
-                min={0}
-                max={10000}
-                onChange={e => updateState('annualHouseBuildingWork', formatNumberWithoutThousands(e.target.value))}
-                value={state.annualHouseBuildingWork}
-              />
-              <SliderWithTitle
-                title={"Surface"}
-                unit={"m²"}
-                min={7}
-                max={300}
-                onChange={e => updateState('surface', formatNumberWithoutThousands(e.target.value))}
-                value={state.surface}
-              />
-              <SliderWithTitle
-                title={"Taxe foncière"}
-                unit={"€/an"}
-                min={0}
-                max={10000}
-                onChange={e => updateState('taxeFonciere', formatNumberWithoutThousands(e.target.value))}
-                value={Math.round(state.taxeFonciere)}
-                disabled={isTaxeFonciereAutoComputed}
-                hasAutoEstimate
-                onAutoEstimateChange={e => {
-                  // If I switch to auto estimate, I have to estimate the tax!
-                  if (!isTaxeFonciereAutoComputed) {
-                    updateState('taxeFonciere', computeTaxFonciere(state.rent))
-                  }
-                  setIsTaxeFonciereAutoComputed(!isTaxeFonciereAutoComputed)
-                }}
-              />
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <Form.Check
-                  custom
-                  type={'checkbox'}
-                  id={`custom-checkbox`}
-                  label={`Le bien est neuf`}
-                  checked={state.isHouseBrandNew}
-                  onChange={e => updateState('isHouseBrandNew', !state.isHouseBrandNew)}
-                />
-                <NewVsOldHouseExplanationModal />
-              </div>
-            </Tile>
+            {houseInputTile}
           </Col>
 
           {/* BIEN: OUTPUT LARGE SCREEN */}
           <Col xs={12} md={6} className={"d-none d-xs-none d-sm-none d-md-block"}>
-            <Row >
-              <Col xs={12} md={6}>
-                <Tile height={121} title={"Prix au m²"} >
-                  <ClassicNumber
-                    value={formatNumberWithThousands(Math.round(pricePerSquareMeter))}
-                    suffix={"€/m²"}
-                    size={40} />
-                </Tile>
-              </Col>
-              <Col xs={12} md={6}>
-                <Tile height={121} title={"Frais de notaire"} >
-                  <ClassicNumber
-                    value={formatNumberWithThousands(Math.round(notarialFee))}
-                    suffix={"€"}
-                    size={40} />
-                </Tile>
-              </Col>
-            </Row>
-            <Row>
-              <Col xs={12} md={6}>
-                <Tile height={121} title={"Prix total"} >
-                  <ClassicNumber
-                    value={formatNumberWithThousands(Math.round(totalPrice))}
-                    suffix={"€"}
-                    size={40} />
-                </Tile>
-              </Col>
-              <Col xs={12} md={6}>
-
-              </Col>
-            </Row>
+            {houseOutputBigTile}
           </Col>
 
           {/* BIEN: OUTPUT SMALL SCREEN */}
           <Col xs={12} md={6} className={"d-xs-block d-sm-block d-md-none"}>
-            <Tile height={90} title={""} >
-              <p>
-                <span>&rarr; Le prix total de votre bien s'élève à </span>
-                <span><code>{formatNumberWithThousands(Math.round(totalPrice))}</code></span>
-                <span> euros. Il inclut </span>
-                <span><code>{formatNumberWithThousands(Math.round(notarialFee))}</code></span>
-                <span> euros de frais de notaire. Cela représente </span>
-                <span><code>{formatNumberWithThousands(Math.round(pricePerSquareMeter))}</code></span>
-                <span> euros par m2.</span>
-              }
-              </p>
-            </Tile>
+            {houseOutputSmallTile}
           </Col>
         </Row>
 
@@ -277,87 +510,17 @@ const IndexPage = () => {
         <Row>
           {/* EMPRUNT: INPUT*/}
           <Col xs={12} md={6}>
-            <Tile height={190} title={"Emprunt"}>
-              <SliderWithTitle
-                title={"Quantité empruntée"}
-                unit={"€"}
-                min={0}
-                max={totalPrice}
-                onChange={e => updateState('loanAmount', formatNumberWithoutThousands(e.target.value))}
-                value={state.loanAmount}
-              />
-              <SliderWithTitle
-                title={"Apport"}
-                unit={"€"}
-                min={0}
-                max={totalPrice}
-                onChange={e => updateState('loanAmount', totalPrice - formatNumberWithoutThousands(e.target.value))}
-                value={totalPrice - state.loanAmount}
-              />
-              <SliderWithTitle
-                title={"Durée du prêt"}
-                unit={"Années"}
-                min={1}
-                max={25}
-                onChange={e => updateState('loanLength', formatNumberWithThousands(e.target.value))}
-                value={state.loanLength}
-              />
-              <SliderWithTitle
-                title={"Taux d'emprunt"}
-                unit={"%"}
-                min={0.2}
-                max={8}
-                onChange={e => updateState('loanRate', formatNumberWithThousands(e.target.value))}
-                value={state.loanRate}
-              />
-            </Tile>
+            {loanInputTile}
           </Col>
 
           {/* EMPRUNT: OUTPUT BIG SCREEN*/}
           <Col xs={12} md={6} className={"d-none d-xs-none d-sm-none d-md-block"}>
-            <Tile height={75} title={"Intéret annuel"} explanation={<RentabiliteBruteExplanationModal />} >
-              <ClassicNumber value={formatNumberWithThousands(Math.round(loanInterestPerYear))} suffix={"€"} size={50} />
-            </Tile>
-            <Row>
-              <Col xs={12} md={4}>
-                <Tile height={75} title={"Mensualité"} explanation={<RentabiliteBruteExplanationModal />} >
-                  <ClassicNumber value={formatNumberWithThousands(Math.round(mensuality))} suffix={"€"} size={30} />
-                </Tile>
-              </Col>
-              <Col xs={12} md={4}>
-                <Tile height={75} title={"Total Remboursé"} >
-                  <ClassicNumber value={formatNumberWithThousands(Math.round(totalPaidBack))} suffix={"€"} size={30} />
-                </Tile>
-              </Col>
-              <Col xs={12} md={4}>
-                <Tile height={75} title={"Total intérêt"} >
-                  <ClassicNumber value={formatNumberWithThousands(Math.round(totalLoanInterests))} suffix={"€"} size={30} />
-                </Tile>
-              </Col>
-            </Row>
+            {loanOutputBigTile}
           </Col>
 
           {/* EMPRUNT: OUTPUT SMALL SCREEN */}
           <Col xs={12} md={6} className={"d-xs-block d-sm-block d-md-none"}>
-            <Tile height={90} title={""} >
-              {state.loanAmount === 0 ?
-                (<p>
-                  <span>&rarr; Pas besoin d'emprunt pour financer votre achat? Veinard! </span>
-                  <span>😛</span>
-                  <br />
-                  <span>Sinon, renseignez les champs ci-dessus.</span>
-                </p>) :
-                (<p>
-                  <span>&rarr; Pour rembourser votre prêt de </span>
-                  <span><code>{state.loanAmount}</code></span>
-                  <span> vous paierez des mensualités de </span>
-                  <span><code>{formatNumberWithThousands(Math.round(mensuality))}</code></span>
-                  <span> euros. Au final c'est </span>
-                  <span><code>{formatNumberWithThousands(Math.round(totalPaidBack))}</code></span>
-                  <span> euros que vous rembourserez à la banque.</span>
-                </p>)
-              }
-            </Tile>
+            {loanOutputSmallTile}
           </Col>
         </Row>
 
@@ -368,52 +531,12 @@ const IndexPage = () => {
         <Row>
           {/* IMPOTS: INPUT*/}
           <Col xs={12} md={6}>
-            <Tile height={300} title={"Impôts"}>
-              <SliderWithTitle
-                title={"Revenu net imposable"}
-                unit={"€/an"}
-                min={10000}
-                max={300000}
-                onChange={e => updateState('netAnnualRevenu', formatNumberWithoutThousands(e.target.value))}
-                value={state.netAnnualRevenu}
-              />
-
-              <SelectWithTitle
-                options={numberOfFiscalPeopleOptions}
-                title={"Parts fiscales"}
-                value={state.numberOfFiscalPeople}
-                onChange={e => updateState('numberOfFiscalPeople', e.target.value)}
-                explanation={<RentabiliteBruteExplanationModal />}
-              />
-              <Form.Check
-                custom
-                type={'checkbox'}
-                label={`Autre revenu immo?`}
-                checked={false}
-                onChange={e => { console.log("todo") }}
-              />
-            </Tile>
+            {taxInputTile}
           </Col>
 
           {/* IMPOTS: OUTPUT*/}
           <Col xs={12} md={6}>
-            <Tile height={75} title={"Impot Initial"} explanation={<RentabiliteBruteExplanationModal />} >
-              <EvolutionNumber
-                valueBefore={formatNumberWithThousands(Math.round(initialAnnualTax))}
-                valueAfter={formatNumberWithThousands(Math.round(withLocationAnnualTax))}
-                suffix={"€"}
-                size={30} />
-            </Tile>
-            <Tile height={75} title={"Taux moyen d'imposion (TMI)"} explanation={<RentabiliteBruteExplanationModal />} >
-              <EvolutionNumber
-                valueBefore={Math.round(initialTMI * 100) / 100}
-                valueAfter={Math.round(withLocationTMI * 100) / 100}
-                suffix={"%"}
-                size={30} />
-            </Tile>
-            <Tile height={75} title={"Surplus d'împot"} >
-              <ClassicNumber value={Math.round(withLocationAnnualTax - initialAnnualTax)} suffix={"€"} size={50} />
-            </Tile>
+            {taxOutputBigTile}
           </Col>
         </Row>
 
@@ -424,21 +547,7 @@ const IndexPage = () => {
 
         {/* FISCALITE: INPUT*/}
         <Row>
-          <Col xs={12} md={6}>
-            <Tile height={110} title={"Fiscalité"}>
-              <Form.Group>
-                <SelectWithTitle
-                  title={"Fiscalité"}
-                  onChange={e => updateState('fiscality', e.target.value)}
-                  options={fiscalOptions}
-                />
-              </Form.Group >
-            </Tile>
-          </Col>
-          <Col xs={12} md={6}>
-            <Tile height={110} title={"Fiscalité"}>
-            </Tile>
-          </Col>
+          {fiscalityInputTile}
         </Row>
 
 
@@ -450,69 +559,12 @@ const IndexPage = () => {
 
           {/* LOCATION: INPUT */}
           <Col xs={12} md={6}>
-            <Tile height={260} title={"Location"}>
-              <SliderWithTitle
-                title={"Loyer"}
-                unit={"€ / mois"}
-                min={100}
-                max={4000}
-                onChange={e => updateState('rent', formatNumberWithoutThousands(e.target.value))}
-                value={state.rent}
-              />
-              <SliderWithTitle
-                title={"Frais agence"}
-                unit={"€ / mois"}
-                min={0}
-                max={1000}
-                onChange={e => updateState('agencyMensualFee', formatNumberWithoutThousands(e.target.value))}
-                value={state.agencyMensualFee}
-              />
-              <SliderWithTitle
-                title={"Mois sans locataire"}
-                unit={"nombre"}
-                min={0}
-                max={12}
-                onChange={e => updateState('monthsWithNoRent', formatNumberWithoutThousands(e.target.value))}
-                value={state.monthsWithNoRent}
-              />
-              <SliderWithTitle
-                title={"Charge du proprio"}
-                unit={"€ / mois"}
-                min={0}
-                max={1000}
-                onChange={e => updateState('ownerMensualFees', formatNumberWithoutThousands(e.target.value))}
-                value={state.ownerMensualFees}
-              />
-
-              <SliderWithTitle
-                title={"Charge récup."}
-                unit={"€ / mois"}
-                min={0}
-                max={1000}
-                onChange={e => updateState('refundableMensualFees', formatNumberWithoutThousands(e.target.value))}
-                value={state.refundableMensualFees}
-              />
-
-            </Tile>
+            {locationInputTile}
           </Col>
 
           {/* LOCATION: OUTPUT */}
           <Col xs={12} md={6}>
-            <Tile height={140} title={"Rentabilite nette nette"} explanation={<RentabiliteNetNetExplanationModal />} >
-              <ColoredNumber value={Math.round(rentabiliteNetNet * 100) / 100} suffix={"%"} />
-            </Tile>
-            <Row>
-              <Col xs={12} md={6}>
-                <Tile height={75} title={"Brute"} explanation={<RentabiliteBruteExplanationModal />} >
-                  <ClassicNumber value={Math.round(rentabiliteBrute * 100) / 100} suffix={"%"} size={30} />
-                </Tile>
-              </Col>
-              <Col xs={12} md={6}>
-                <Tile height={75} title={"Nette de charge"} >
-                  <ClassicNumber value={Math.round(rentabiliteNet * 100) / 100} suffix={"%"} size={30} />
-                </Tile>
-              </Col>
-            </Row>
+            {locationOutputBigTile}
           </Col>
 
         </Row>

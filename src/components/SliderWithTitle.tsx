@@ -18,6 +18,8 @@ type SliderWithTitleProps = {
     disabled?: boolean;
     hasAutoEstimate?: boolean;
     onAutoEstimateChange?: (e: any) => void;
+    explanation: any;
+
 }
 
 export const SliderWithTitle = ({
@@ -29,7 +31,8 @@ export const SliderWithTitle = ({
     onChange,
     disabled,
     hasAutoEstimate,
-    onAutoEstimateChange
+    onAutoEstimateChange,
+    explanation
 }: SliderWithTitleProps) => {
 
     return (
@@ -39,6 +42,9 @@ export const SliderWithTitle = ({
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'left' }}>
                     <span className={"slider-with-title-title"}>{title}</span>
                     <span className={"slider-with-title-unit"}>{unit}</span>
+                    <span>
+                        {explanation}
+                    </span>
                     <div className={"slider-with-title-text-input"}>
                         <Form.Control
                             size="sm"
@@ -48,6 +54,7 @@ export const SliderWithTitle = ({
                             disabled={disabled}
                         />
                     </div>
+
                     {hasAutoEstimate &&
                         <div className={"slider-with-title-checkbox"}>
                             <Form.Check
@@ -71,6 +78,7 @@ export const SliderWithTitle = ({
                         max={max}
                     />
                 </div>}
+
             </div>
 
         </Form.Group>

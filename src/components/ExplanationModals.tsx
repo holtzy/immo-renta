@@ -1,6 +1,7 @@
 import "./explanationModals.css"
 import * as React from "react"
 import Modal from "react-bootstrap/Modal";
+import Button from "react-bootstrap/Button";
 
 export const RentabiliteBruteExplanationModal = () => {
 
@@ -74,6 +75,56 @@ export const NewVsOldHouseExplanationModal = () => {
                         <li><b>Avantage fiscaux</b>: certains types de déclarations fiscales comme la loi Pinel ne sont
                         accessible que pour des bien neufs.</li>
                     </ul>
+                </Modal.Body>
+            </Modal>
+        </>
+    )
+}
+
+
+export const InterestRateExplanationModal = () => {
+
+    const [isOpen, setIsOpen] = React.useState(false)
+
+    return (
+        <>
+            <span className={'explanation-modal-button'} onClick={() => setIsOpen(true)}>
+                🤔
+            </span>
+
+            <Modal show={isOpen} onHide={() => setIsOpen(false)}>
+                <Modal.Body>
+                    <p>
+                        On entend ici le taux d'intérêt global, qui comprend les assurances, frais de dossier etc.
+                    </p>
+                </Modal.Body>
+            </Modal>
+        </>
+    )
+}
+
+
+
+
+
+export const PartFiscalExplanationModal = () => {
+
+    const [isOpen, setIsOpen] = React.useState(false)
+
+    return (
+        <>
+            <span className={'explanation-modal-button'} onClick={() => setIsOpen(true)}>
+                🤔
+            </span>
+
+            <Modal show={isOpen} onHide={() => setIsOpen(false)}>
+                <Modal.Body>
+                    <p>
+                        Le nombre de parts fiscales est calculé à partir de la composition familiale de votre foyer fiscal.
+                    </p>
+                    <p>&rarr; Un adulte compte pour un point. Un couple sans enfant aura donc 2 parts fiscales</p>
+                    <p>&rarr; Les 2 premiers enfants comptent pour une demi part fiscale. Les suivants pour une part complète. Un couple avec 2 enfants compte donc pour 3 parts fiscales. Un couple avec 3 enfants, 4 parts fiscales.</p>
+                    <Button className={'btn'} href=''>Source</Button>
                 </Modal.Body>
             </Modal>
         </>

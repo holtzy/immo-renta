@@ -400,15 +400,19 @@ const IndexPage = () => {
 
   const fiscalityInputTile = (
     <div>
-      <Tile title={"Fiscalité"}>
-        <Form.Group>
-          <SelectWithTitle
-            title={"Fiscalité"}
-            onChange={e => updateState('fiscality', e.target.value)}
-            options={fiscalOptions}
-          />
-        </Form.Group >
-      </Tile>
+      <Row>
+        <Col xs={12} md={6}>
+          <p>La fiscalité est un élément clé de votre projet immobilier. Veuillez choisir votre option privilégiée ci contre.
+          </p>
+          <Form.Group>
+            <SelectWithTitle
+              title={"Fiscalité"}
+              onChange={e => updateState('fiscality', e.target.value)}
+              options={fiscalOptions}
+            />
+          </Form.Group >
+        </Col>
+      </Row>
     </div>
   )
 
@@ -473,6 +477,7 @@ const IndexPage = () => {
       <Tile title={"Rentabilite nette nette"} explanation={<RentabiliteNetNetExplanationModal />} >
         <ColoredNumber value={Math.round(rentabiliteNetNet * 100) / 100} suffix={"%"} />
       </Tile>
+      <br />
       <Row>
         <Col xs={12} md={6}>
           <Tile title={"Brute"} explanation={<RentabiliteBruteExplanationModal />} >
@@ -516,9 +521,6 @@ const IndexPage = () => {
             <br /><hr /><br />
             {loanInputTile}
             {loanOutputSmallTile}
-            <br /><hr /><br />
-            {fiscalityInputTile}
-            {fiscalityOutputSmallTile}
           </Col>
 
           <Col xs={12} md={6}>
@@ -530,9 +532,21 @@ const IndexPage = () => {
           </Col>
         </Row>
 
-        <br /><br />
+      </Container>
+
+      <div className={"highlighted-section"} >
+        <Container >
+          <Row>
+            {fiscalityInputTile}
+          </Row>
+        </Container>
+      </div>
+
+      <Container>
+
         <hr />
 
+        <br /><br />
 
         <Row>
           <Col xs={12} md={6}>

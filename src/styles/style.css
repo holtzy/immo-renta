@@ -16,6 +16,7 @@
     --dark-purple: #6732C5;
     --medium-purple: #8f73be;
     --light-purple: #a392c0;
+    --lighter-purple: #eae4f5;
 
     /* item colors */
     --background-dark: var(--light-grey);
@@ -97,6 +98,14 @@ a {
 .result-explanation-text > span {
     font-size: 15px;
     color: var(--text-light);
+}
+
+.highlighted-section {
+    background-color: var(--lighter-purple);
+    margin-top: 40px;
+    margin-bottom: 40px;
+    padding-top: 40px;
+    padding-bottom: 40px;
 }
 
 

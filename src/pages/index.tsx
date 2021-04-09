@@ -390,12 +390,10 @@ const IndexPage = () => {
     <Tile title={""} hasBorder>
       <div className={"result-explanation-text"}>
         <span>&rarr; Votre taux d'imposition moyen est de </span>
-        <span><code>{state.loanAmount}</code></span>
-        <span> Et voila ce qu'il se passe </span>
-        <span><code>{formatNumberWithThousands(Math.round(mensuality))}</code></span>
-        <span> euros. Au final c'est </span>
-        <span><code>{formatNumberWithThousands(Math.round(totalPaidBack))}</code></span>
-        <span> euros que vous rembourserez à la banque.</span>
+        <span><code>{Math.round(initialTMI * 100) / 100}</code></span>
+        <span>%. Au total, vous payez </span>
+        <span><code>{formatNumberWithThousands(Math.round(initialAnnualTax))}</code></span>
+        <span> euros d'împot par an. Attention, la location d'un logement va probablement faire augmenter cette somme!</span>
       </div>
     </Tile>
   )
@@ -490,6 +488,20 @@ const IndexPage = () => {
     </div>
   )
 
+  const locationOutputSmallTile = (
+    <Tile title={""} hasBorder>
+      <div className={"result-explanation-text"}>
+        <span>&rarr; Vos loyers rapportent </span>
+        <span><code>{annualRent}€</code></span>
+        <span> par an, soit une rentabilité brute de </span>
+        <span><code>{Math.round(rentabiliteBrute * 100) / 100}%</code></span>
+        <span>. Une fois les différentes charges prises en compte, la rentabilité nette nette s'élève à </span>
+        <span><code>{Math.round(rentabiliteNetNet * 100) / 100}%</code></span>
+        <span>.</span>
+      </div>
+    </Tile>
+  )
+
   return (
 
     <Layout title="Immo Renta" seoDescription="Calculez la rentabilité de votre investissement immobilier en 1 click.">
@@ -514,6 +526,7 @@ const IndexPage = () => {
             {taxOutputSmallTile}
             <br /><hr /><br />
             {locationInputTile}
+            {locationOutputSmallTile}
           </Col>
         </Row>
 

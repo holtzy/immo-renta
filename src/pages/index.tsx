@@ -20,6 +20,8 @@ import {
   PartFiscalExplanationModal
 } from "../components/ExplanationModals"
 
+import { AreaChart } from "../viz/AreaChart"
+
 import {
   computeTaxFonciere,
   computeAnnualTaxes,
@@ -507,12 +509,19 @@ const IndexPage = () => {
     </Tile>
   )
 
+
+  const rentabilityEvolutionTile = (
+    <Tile title={"Evolution de la rentabilité"} hasBorder>
+      <AreaChart data="hello" />
+    </Tile>
+  )
+
   return (
 
     <Layout title="Immo Renta" seoDescription="Calculez la rentabilité de votre investissement immobilier en 1 click.">
 
+      {/* All Inputs */}
       <Container>
-
         <br /><br /><br />
         <Row>
           <Col xs={12} md={6}>
@@ -531,9 +540,9 @@ const IndexPage = () => {
             {locationOutputSmallTile}
           </Col>
         </Row>
-
       </Container>
 
+      {/* Fiscality input */}
       <div className={"highlighted-section"} >
         <Container >
           <Row>
@@ -542,17 +551,20 @@ const IndexPage = () => {
         </Container>
       </div>
 
+      {/* Results */}
       <Container>
 
         <hr />
-
         <br /><br />
 
+        {/* Results */}
         <Row>
           <Col xs={12} md={6}>
             {locationOutputBigTile}
           </Col>
-
+          <Col xs={12} md={6}>
+            {rentabilityEvolutionTile}
+          </Col>
         </Row>
 
 

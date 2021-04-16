@@ -1,0 +1,12 @@
+.question-card-container {
+    border: solid;
+    border-width: .1px;
+    border-radius: 3px;
+    text-align: center;
+    padding: 10px;
+}
+
+.question-card-container:hover {
+    background-color: var(--text-vibrant)
+}
+

@@ -31,7 +31,7 @@ export default function TopNavbar() {
 
           <Nav.Link href="/concepts">Calcul</Nav.Link>
 
-          <Nav.Link href="/gallery">Blog</Nav.Link>
+          <Nav.Link href="/faq">FAQ</Nav.Link>
 
           <Nav.Link href="/about">About</Nav.Link>
 

@@ -13,7 +13,7 @@ type QuestionCardProps = {
 export const QuestionCard = ({ link, title, description, logo }: QuestionCardProps) => {
     return (
         <div className="question-card-container">
-            <p>{title}</p>
+            <p className="question-card-title">{title}</p>
             <p>{description}</p>
             <Link to={link}>Lire</Link>
         </div>

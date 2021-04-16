@@ -1,3 +1,10 @@
+.question-card-title {
+    font-size:25px;
+    background: -webkit-linear-gradient(red, blue);
+    -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
 .question-card-container {
     border: solid;
     border-width: .1px;

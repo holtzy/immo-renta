@@ -113,9 +113,8 @@ const IndexPage = () => {
   const notarialFee = state.isHouseBrandNew ? state.price * 4 / 100 : state.price * 8 / 100
   const totalPrice = state.price + notarialFee + state.initialHouseBuildingWork
 
-  console.log("numberOfFiscalPeople", state.numberOfFiscalPeople)
   // Taxes
-  const initialAnnualTax = computeAnnualTaxes(state.netAnnualRevenu, state.numberOfFiscalPeople)
+  const initialAnnualTax = computeAnnualTaxes(state.netAnnualRevenu, 2, 0)
   const initialTMI = initialAnnualTax / state.netAnnualRevenu * 100
   const loyerImposable =
     state.fiscality === "nonMeubleMicro" ?
@@ -123,7 +122,7 @@ const IndexPage = () => {
       state.fiscality === "meuble" ?
         annualRent * 0.5 :
         annualRent
-  const withLocationAnnualTax = computeAnnualTaxes((state.netAnnualRevenu + loyerImposable), state.numberOfFiscalPeople)
+  const withLocationAnnualTax = computeAnnualTaxes((state.netAnnualRevenu + loyerImposable), 2, 0)
   const taxSurplus = withLocationAnnualTax - initialAnnualTax
   const withLocationTMI = withLocationAnnualTax / (state.netAnnualRevenu + loyerImposable) * 100
 

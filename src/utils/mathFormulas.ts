@@ -21,30 +21,35 @@ export const applyBaremeProgressif = (amount: number) => {
     return taxValue
 }
 
-// Compute the amount of tax to pay according to the family revenu
-// and the # of people composing the family
 // First and Second child are counted as half an adult
 // Third child is counted as an adult
-// But the reduction of tax due to a child is limited to 1500 euros
+export const getNbrDeParts = (numberOfAdult: number, numberOfKid: number) => {
+    const numberofKidParts = numberOfKid > 2 ?
+        0.5 + 0.5 + numberOfKid - 2 :
+        numberOfKid / 2
+    return numberOfAdult + numberofKidParts
+}
+
+// Compute the amount of tax to pay according to the family revenu
+// and the # of people composing the family
+// Note: the reduction of tax due to a child is limited to 1500 euros
 // Calculation: https://www.economie.gouv.fr/particuliers/tranches-imposition-impot-revenu#
 // Calculation with children: https://www.economie.gouv.fr/particuliers/quotient-familial
 export const computeAnnualTaxes = (revenu: number, numberOfAdult: number, numberOfKid: number) => {
 
-    // Step 0: how many "parts" are declared
-    const numberofKidParts = numberOfKid > 2 ?
-        0.5 + 0.5 + numberOfKid - 2 :
-        numberOfKid / 2
-    const numberOfParts = numberOfAdult + numberofKidParts
+    // how many "parts" are declared
+    const nbrDeParts = getNbrDeParts(numberOfAdult, numberOfKid)
 
-    // Step 1: divide the total revenue by the "nombre de parts"
-    const revenuPerNumberOfPeople = revenu / numberOfParts
+    // compute taxes with and without taking the kids into account;
+    const taxParentOnly = applyBaremeProgressif(revenu / numberOfAdult) * numberOfAdult
+    const taxWithKids = applyBaremeProgressif(revenu / nbrDeParts) * nbrDeParts
+    const avantageFiscal = taxParentOnly - taxWithKids
 
-    // Step 2: application du barême progressif en prenant en compte les enfants & sans enfants avec plafonnement
-    const baremeOutputWithKids = applyBaremeProgressif(revenuPerNumberOfPeople)
-    const baremeOutputNoKids = applyBaremeProgressif(numberOfAdult) - 1570 * numberOfKid
-
-    // Keep the worst option between both and multiply by the number of part
-    return Math.max(baremeOutputWithKids, baremeOutputNoKids) * numberOfParts
+    // Avantage fiscal est plafonné à 1570 euros per kid
+    const plafonnement = 1570 * numberOfKid
+    return avantageFiscal > plafonnement ?
+        taxParentOnly - plafonnement :
+        taxWithKids
 }
 
 // Found and corrected from https://www.hellopret.fr/taux-immobilier/calcul-interet-emprunt/

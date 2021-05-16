@@ -66,7 +66,6 @@ export const computeTotalLoanInterest = (mensuality: number, loanLength: number,
     return (mensuality * loanLength * 12) - amount
 }
 
-
 export const computeTaxFonciere = (rent: number) => {
     return rent
 }
